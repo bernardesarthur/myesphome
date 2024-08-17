@@ -1,0 +1,125 @@
+esphome:
+  name: sonoff-mini-do-som-da-cozinha
+  friendly_name: Som da Cozinha
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: True
+  early_pin_init: False
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        - switch.toggle: buttonpress
+    on_release: 
+      then:
+        - switch.toggle: buttonpress
+    on_multi_click: 
+      - timing: 
+          - ON for at least 2s
+        then:
+          - binary_sensor.template.publish:
+              id: long_press
+              state: ON
+
+  - platform: template
+    name: Long Press
+    id: long_press
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    on_press:
+      - delay: 500ms
+      - binary_sensor.template.publish:
+          id: long_press
+          state: OFF
+
+  - platform: gpio
+    pin: 
+      number: GPIO4
+      mode: INPUT_PULLUP
+      inverted: True
+    id: switch_1
+    name: Switch 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        - switch.toggle: buttonpress
+    on_release: 
+      then:
+        - switch.toggle: buttonpress
+
+# Se for pulsador remover o on_release
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO12
+      inverted: False
+    name: Button Press
+    id: buttonpress
+    internal: False
+    disabled_by_default: False
+    restore_mode: ALWAYS_OFF
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: relay_2
+
+  - platform: template
+    name: Click
+    lambda: |-
+      if (id(buttonpress).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action:
+      - switch.turn_on: buttonpress
+      - delay: 1s
+      - switch.turn_off: buttonpress
+    turn_off_action:
+      - switch.turn_off: buttonpress
+
+  - platform: template
+    name: Hold
+    lambda: |-
+      if (id(buttonpress).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action:
+      - switch.turn_on: buttonpress
+      - delay: 5s
+      - switch.turn_off: buttonpress
+    turn_off_action:
+      - switch.turn_off: buttonpress
+
+status_led:
+  pin: 
+    number: GPIO13
+    inverted: False

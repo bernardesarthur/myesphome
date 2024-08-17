@@ -1,0 +1,83 @@
+esphome:
+  name: sensor-de-caixa-dagua
+  friendly_name: Sensor de Caixa Dagua
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: True
+  early_pin_init: False
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: boia
+    name: boia
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: problem
+    entity_category: diagnostic
+    filters: 
+      - delayed_on_off: 10ms
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: GPIO4
+    echo_pin: GPIO5
+    internal: True
+    id: ultrassonico
+    disabled_by_default: False
+    update_interval: 60s
+#    pulse_time: 20us
+#    timeout: 1.0m
+    unit_of_measurement: "m"
+
+  - platform: template
+    id: nivel
+    name: Nível
+    internal: False
+    disabled_by_default: False
+    lambda: return (0.94-id(ultrassonico).state);
+    unit_of_measurement: "m"
+    device_class: distance
+    accuracy_decimals: 2
+    update_interval: 60s
+
+  - platform: template
+    id: percentual_var
+    internal: True
+    disabled_by_default: False
+    unit_of_measurement: "%"
+    lambda: return ((id(nivel).state/0.65)*100);
+    accuracy_decimals: 1
+    update_interval: 60s
+    device_class: moisture
+
+  - platform: template
+    id: percentual
+    internal: False
+    disabled_by_default: False
+    name: Percentual
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    update_interval: 60s
+    device_class: moisture
+    lambda: |-
+      if (id(percentual_var).state > 100) {
+      return 100;
+      } else if (id(percentual_var).state < 0) {
+      return 0;
+      } else {
+      return id(percentual_var).state;
+      }

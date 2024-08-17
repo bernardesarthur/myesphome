@@ -1,0 +1,81 @@
+esphome:
+  name: sonoff-tx2
+  friendly_name: Sonoff TX 2
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: True
+  early_pin_init: False
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_1
+
+  - platform: gpio
+    pin:
+      number: GPIO9
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_2
+    name: Button 2
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_2
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO12
+      inverted: False
+    name: Relay 1
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: relay_1
+
+  - platform: gpio
+    pin:
+      number: GPIO5
+      inverted: False
+    name: Relay 2
+    id: relay_2
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: relay_1
+
+status_led:
+  pin: 
+    number: GPIO13
+    inverted: False

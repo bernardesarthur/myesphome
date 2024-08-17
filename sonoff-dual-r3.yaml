@@ -1,0 +1,183 @@
+esphome:
+  name: sonoff-dual-r3
+  friendly_name: Sonoff Dual R3
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+uart:
+  tx_pin: GPIO25
+  rx_pin: GPIO26
+  baud_rate: 4800
+  parity: NONE
+  stop_bits: 2
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO32
+      mode: INPUT_PULLUP
+      inverted: True
+    id: switch_1
+    name: Switch 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_1
+    on_release: 
+      then:
+        - switch.toggle: relay_1
+
+# Se for pulsador remover o on_release
+
+  - platform: gpio
+    pin:
+      number: GPIO33
+      mode: INPUT_PULLUP
+      inverted: True
+    id: switch_2
+    name: Switch 2
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        - switch.toggle: relay_2
+    on_release: 
+      then:
+        - switch.toggle: relay_2
+
+# Se for pulsador remover o on_release
+
+sensor:
+  - platform: bl0939
+    update_interval: 5s
+    voltage:
+      name: voltage
+      id: voltage
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 5s
+    current_1:
+      name: Current 1
+      id: current_1
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 60s
+    current_2:
+      name: Current 2
+      id: current_2
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 5s
+    active_power_1:
+      name: Power 1
+      id: power_1
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 5s
+    active_power_2:
+      name: Power 2
+      id: power_2
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 5s
+    energy_1:
+      name: Energy 1
+      id: energy_1
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 5s
+    energy_2:
+      name: Energy 2
+      id: energy_2
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 5s
+    energy_total:
+      name: Energy Total
+      id: energy_total
+      internal: False
+      disabled_by_default: False
+      filters:
+        - throttle_average: 5s
+
+  - platform: template
+    name: Power Factor 1
+    internal: False
+    disabled_by_default: False
+    device_class: power_factor
+    id: power_factor_1
+    lambda: return id(power_1).state / id(voltage).state / id(current_1).state;
+
+  - platform: template
+    name: Power Factor 2
+    internal: False
+    disabled_by_default: False
+    device_class: power_factor
+    id: power_factor_2
+    lambda: return id(power_2).state / id(voltage).state / id(current_2).state;
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO14
+      inverted: False
+    name: Relay 1
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: &interlock_group_1 [relay_1, relay_2]
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: relay_1
+
+  - platform: gpio
+    pin:
+      number: GPIO27
+      inverted: False
+    name: Relay 2
+    id: relay_2
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: *interlock_group_1
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: relay_2
+
+status_led:
+  pin: 
+    number: GPIO13
+    inverted: False

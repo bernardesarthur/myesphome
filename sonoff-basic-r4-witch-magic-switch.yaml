@@ -1,0 +1,79 @@
+esphome:
+  name: sonoff-dual-r3-lite
+  friendly_name: Sonoff Dual R3 Lite
+  platformio_options:
+    board_build.mcu: esp32c3
+    board_build.variant: esp32c3
+    
+esp32:
+  variant: ESP32C3
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
+      CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/ssieb/esphome_components
+    components: [ magic_switch ]
+    refresh: 1min
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO9
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_1
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO4
+      inverted: False
+    name: Relay 1
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+ #   on_turn_on:
+ #   - delay: 500ms
+ #   - switch.turn_off: relay_1
+
+magic_switch:
+  pin: 5
+  on_switch:
+    - switch.toggle: relay_1
+
+status_led:
+  pin: 
+    number: GPIO6
+    inverted: False

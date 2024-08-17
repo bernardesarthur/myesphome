@@ -1,0 +1,96 @@
+esphome:
+  name: sonoff-pow-r3-25a
+  friendly_name: Sonoff Pow R3 25A
+
+esp32:
+  board: nodemcu-32s
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+uart:
+  rx_pin: GPIO3
+  baud_rate: 4800
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press:
+      then:
+        switch.toggle: relay_1
+
+sensor:
+  - platform: cse7766
+    voltage:
+      name: voltage
+      id: voltage
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    current:
+      name: Current
+      id: current
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    power:
+      name: Power
+      id: power
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    energy:
+      name: Energy
+      id: energy
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    apparent_power:
+      name: Apparent Power
+      id: apparent_power
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+
+switch:
+  - platform: gpio
+    name: Relay 1
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+    id: relay_1
+    pin:
+      number: GPIO12
+      inverted: True
+
+status_led:
+  pin: 
+    number: GPIO13
+    inverted: True

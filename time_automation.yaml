@@ -1,0 +1,75 @@
+# Se tiver problemas com horário no ESPHOME, fazer a seguinte alteração e explicação logo abaixo:
+
+Não, isto afeta tudo relativo ao ESPHome, entretanto são poucos os sistemas que vão usar o horário em um Display como no NSPanel.
+Não está no topo da minha memória, mas se olhar lá na discussão do ESPHome que compartilhei acima, o erro vem originalmente do ESP e dependendo da versão do esp-idf usado ele já foi corrigido.
+O padrão do ESPHome é o esp-idf v4, que possui o erro. No esp-idf v5, este erro já foi corrigido.
+O código nosso para o NSPanel já é totalmente compatível com o esp-idf v5, mas como este ainda não é o padrão do ESPHome, achamos melhor não usá-lo ainda.
+
+Isto é devido a um erro do ESPHome.
+Aonde está timezone: America/Sao_Paulo, mude para timezone: "GMT+3"
+Note que intencionalmente inverti o sinal do fuso horário devido a um erro no ESPHome.
+
+time:
+  - platform: homeassistant
+    id: esphome_time
+
+interval:
+  - interval: 1min
+    then:
+      - if:
+          condition:
+            and:
+              - time.has_time:
+                  id: esphome_time
+                  hour: 9
+                  minute: 0
+              - or:
+                  - time.is_day_of_week:
+                      id: esphome_time
+                      days: MON
+                  - time.is_day_of_week:
+                      id: esphome_time
+                      days: WED
+          then:
+            - switch.turn_on: relay_1
+
+time:
+  - platform: homeassistant
+    id: esphome_time
+
+  - platform: cron
+    id: relay_schedule
+    cron: "0 9 * * 1,3"
+    then:
+      - switch.turn_on: relay_1
+
+time:
+  - platform: homeassistant
+    id: esphome_time
+
+  # Desliga o relay_1 às 2h da manhã de segunda a sexta-feira
+  - platform: cron
+    id: relay_off_schedule
+    cron: "0 2 * * 1-5"
+    then:
+      - switch.turn_off: relay_1
+
+  # Liga o relay_1 1 minuto depois, às 2h01 da manhã de segunda a sexta-feira
+  - platform: cron
+    id: relay_on_schedule
+    cron: "1 2 * * 1-5"
+    then:
+      - switch.turn_on: relay_1
+
+time:
+  - platform: homeassistant
+    id: esphome_time
+
+  # Desliga o relay_1 às 2h00 da manhã de segunda a sexta-feira e o liga 1 minuto depois
+  - platform: cron
+    id: relay_cycle_schedule
+    cron: "0 2 * * 1-5"
+    then:
+      - switch.turn_off: relay_1
+      - delay: 1min
+      - switch.turn_on: relay_1

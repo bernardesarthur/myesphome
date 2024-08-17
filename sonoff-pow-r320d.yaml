@@ -1,0 +1,190 @@
+esphome:
+  name: sonoff-pow-r320d
+  friendly_name: Sonoff Pow R320D
+
+esp32:
+  board: nodemcu-32s
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+uart:
+  rx_pin: GPIO16
+  baud_rate: 4800
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_click:
+      - max_length: 350ms
+        then:
+          switch.toggle: relay_1
+      - min_length: 360ms
+        max_length: 3s
+        then:
+          - if:
+              condition:
+                binary_sensor.is_on: page
+              then:
+                binary_sensor.template.publish:
+                  id: page
+                  state: OFF
+              else:
+                binary_sensor.template.publish:
+                  id: page
+                  state: ON
+
+  - platform: template # this is a fake sensor to tell the screen which info to show on display
+    id: page
+    publish_initial_state: True
+    internal: True
+
+  - platform: template
+    name: Subordinate Device
+    id: subordinate_device_on
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    lambda: |-
+      if (isnan(id(power).state)) {
+        return {};
+      } else if (id(power).state > 4) {
+        // Running
+        return true;
+      } else {
+        // Not running
+        return false;
+      }
+
+display:
+  platform: tm1621
+  id: tm1621_display
+  cs_pin: GPIO25
+  data_pin: GPIO14
+  read_pin: GPIO26
+  write_pin: GPIO27
+  lambda: |-
+    if (id(page).state) {
+      it.display_voltage(true);
+      it.display_kwh(false);
+      it.printf(0, "%.1f", id(voltage).state);
+      it.printf(1, "%.1f", id(current).state);
+    } else {  
+      it.display_voltage(false);
+      it.display_kwh(true);
+      it.printf(0, "%.1f", id(energy).state);
+      it.printf(1, "%.1f", id(current).state);
+    }
+
+output:
+  - platform: ledc
+    id: led
+    pin:
+      number: GPIO18
+      inverted: True
+
+sensor:
+  - platform: cse7766
+    voltage:
+      name: voltage
+      id: voltage
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    current:
+      name: Current
+      id: current
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    power:
+      name: Power
+      id: power
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    energy:
+      name: Energy
+      id: energy
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+    apparent_power:
+      name: Apparent Power
+      id: apparent_power
+      filters:
+        - throttle_average: 5s
+      internal: False
+      disabled_by_default: False
+
+switch:
+  - platform: template
+    name: $friendly_name
+    optimistic: True
+    id: relay_1
+    turn_off_action:
+      - switch.turn_on: relay_off
+    turn_on_action:
+      - switch.turn_on: relay_on
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    restore_mode: ALWAYS_OFF
+    internal: True
+    id: relay_off
+    pin:
+      number: GPIO4
+      inverted: False
+    on_turn_on:
+      - delay: 500ms
+      - switch.turn_off: relay_off # bi-stable relay so no need to keep on
+      - light.turn_off: switch_led
+    interlock: [relay_on]
+  - platform: gpio
+    restore_mode: ALWAYS_OFF
+    internal: True
+    id: relay_on
+    pin:
+      number: GPIO2
+      inverted: False
+    on_turn_on:
+      - delay: 500ms
+      - switch.turn_off: relay_on  # bi-stable relay so no need to keep on
+      - light.turn_on: switch_led
+    interlock: [relay_off]
+
+light:
+  - platform: monochromatic
+    id: switch_led
+    output: led
+    internal: True
+
+status_led:
+  pin: 
+    number: GPIO15
+    inverted: True
