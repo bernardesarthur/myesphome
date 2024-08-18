@@ -1,6 +1,6 @@
 esphome:
-  name: sonoff-m5-2c
-  friendly_name: Sonoff M5 2C
+  name: sonoff-m5-3c
+  friendly_name: Sonoff M5 3C
 
 esp32:
   board: esp32dev
@@ -41,7 +41,7 @@ binary_sensor:
 
   - platform: gpio
     pin:
-      number: GPIO15
+      number: GPIO0
       mode: INPUT_PULLUP
       inverted: True
     id: button_2
@@ -54,6 +54,22 @@ binary_sensor:
     on_press: 
       then:
         switch.toggle: relay_2
+
+  - platform: gpio
+    pin:
+      number: GPIO15
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_3
+    name: Button 3
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_3
 
 switch:
   - platform: gpio
@@ -78,10 +94,22 @@ switch:
     internal: False
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
-    on_turn_on:
-      - output.turn_on: led_2
+#    on_turn_on:
 #    - delay: 500ms
 #    - switch.turn_off: relay_2
+
+  - platform: gpio
+    pin:
+      number: GPIO22
+      inverted: False
+    name: Relay 3
+    id: relay_3
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: relay_3
 
   - platform: template
     name: Todos
@@ -94,18 +122,14 @@ switch:
       then:
         - switch.turn_on: relay_1
         - switch.turn_on: relay_2
+        - switch.turn_on: relay_3
     on_turn_off: 
       then:
         - switch.turn_off: relay_1
         - switch.turn_off: relay_2
+        - switch.turn_off: relay_3
 
 output:
-  - platform: gpio
-    id: led_2
-    pin:
-      number: GPIO22
-      inverted: False
-
   - platform: ledc
     id: pwm_output
     pin:
