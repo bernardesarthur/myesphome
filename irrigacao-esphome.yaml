@@ -1,0 +1,132 @@
+captive_portal:
+
+sensor:
+  - platform: adc
+    pin: A0
+    name: "Sensor de umidade"
+    update_interval: 5s
+    unit_of_measurement: "%"
+    filters:
+    # - median:
+    #     window_size: 21
+    #     send_every: 4
+    #     send_first_at: 1
+    - calibrate_linear:
+        - 0.01367 -> 100.00
+        - 0.01660 -> 0.00    
+    - lambda: |
+        if (x < 0) return 0; 
+        else if (x > 100) return 100;
+        else return (x);    
+    accuracy_decimals: 4
+
+switch:
+  - platform: gpio
+    pin: D5
+    id: rele_irrigacao
+    name: "Irrigação"
+    inverted: true    
+
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+wifi:
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+
+# captive_portal:
+
+sensor:
+  - platform: adc
+    pin: 34
+    name: "Humidade do Solo da Amoreira" #1
+    update_interval: 5s
+    unit_of_measurement: "%"
+    attenuation: auto
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 1.1 -> 100
+        - 2.5 -> 0
+    - lambda: if (x < 1) return 0; else return (x);
+    # accuracy_decimals: 0
+
+  - platform: adc
+    pin: 35
+    name: "Humidade do Solo da Lichia" #2
+    update_interval: 5s
+    unit_of_measurement: "%"
+    attenuation: auto
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 1.1 -> 100
+        - 2.5 -> 0
+    - lambda: if (x < 1) return 0; else return (x);
+    # accuracy_decimals: 0
+
+  - platform: adc
+    pin: 32
+    name: "Humidade do Solo do Limoeiro" #3
+    update_interval: 5s
+    unit_of_measurement: "%"
+    attenuation: auto
+    filters:
+    - median:
+        window_size: 7
+        send_every: 4
+        send_first_at: 1
+    - calibrate_linear:
+        - 1.1 -> 100
+        - 2.5 -> 0
+    - lambda: if (x < 1) return 0; else return (x);
+    # accuracy_decimals: 0
+# g33 g25 g26 g27
+
+switch:
+  - platform: gpio
+    pin: 33
+    name: Solenoide da Bomba
+    id: solenoide_bomba
+    # internal: True
+    inverted: True
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: 25
+    name: Solenoide do Limoeiro
+    id: solenoide_limoeiro
+    # internal: True
+    inverted: True
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: 26
+    name: Solenoide da Lichia
+    id: solenoide_lichia
+    # internal: True
+    inverted: True
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin: 27
+    name: Solenoide da Amoreira
+    id: solenoide_amoreira
+    # internal: True
+    inverted: True
+    restore_mode: ALWAYS_OFF
