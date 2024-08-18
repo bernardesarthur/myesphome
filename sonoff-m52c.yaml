@@ -83,6 +83,22 @@ switch:
 #    - delay: 500ms
 #    - switch.turn_off: relay_2
 
+  - platform: template
+    name: Todos
+    id: todos
+    internal: False
+    disabled_by_default: False
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on: 
+      then:
+        - switch.turn_on: relay_1
+        - switch.turn_on: relay_2
+    on_turn_off: 
+      then:
+        - switch.turn_off: relay_1
+        - switch.turn_off: relay_2
+
 output:
   - platform: gpio
     id: led_2
