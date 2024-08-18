@@ -35,6 +35,7 @@ time:
   - platform: sntp
     id: sntp_time
     timezone: America/Sao_Paulo
+#    timezone: "GMT+3"
     update_interval: 60s
     servers:
      - a.st1.ntp.br
