@@ -56,7 +56,7 @@ sensor:
 
   - platform: template
     id: percentual_var
-    internal: True
+    internal: False
     disabled_by_default: False
     unit_of_measurement: "%"
     lambda: |-
