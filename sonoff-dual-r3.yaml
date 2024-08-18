@@ -183,7 +183,13 @@ switch:
     internal: False
     disabled_by_default: False
     optimistic: true
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(relay_1).state || id(relay_2).state) {
+        return true;
+      } else {
+        return false;
+      }
     on_turn_on: 
       then:
         - switch.turn_on: relay_1
