@@ -59,25 +59,43 @@ sensor:
     internal: True
     disabled_by_default: False
     unit_of_measurement: "%"
-    lambda: return ((id(nivel).state/0.65)*100);
+    lambda: |-
+      float valor = (id(nivel).state / 0.65) * 100;
+      if (valor > 100) {
+        return 100;
+      } else if (valor < 0) {
+        return 0;
+      } else {
+        return valor;
+      }
     accuracy_decimals: 1
     update_interval: 60s
     device_class: moisture
 
-  - platform: template
-    id: percentual
-    internal: False
-    disabled_by_default: False
-    name: Percentual
-    unit_of_measurement: "%"
-    accuracy_decimals: 1
-    update_interval: 60s
-    device_class: moisture
-    lambda: |-
-      if (id(percentual_var).state > 100) {
-      return 100;
-      } else if (id(percentual_var).state < 0) {
-      return 0;
-      } else {
-      return id(percentual_var).state;
-      }
+#  - platform: template
+#    id: percentual_var
+#    internal: True
+#    disabled_by_default: False
+#    unit_of_measurement: "%"
+#    lambda: return ((id(nivel).state/0.65)*100);
+#    accuracy_decimals: 1
+#    update_interval: 60s
+#    device_class: moisture
+
+#  - platform: template
+#    id: percentual
+#    internal: False
+#    disabled_by_default: False
+#    name: Percentual
+#    unit_of_measurement: "%"
+#    accuracy_decimals: 1
+#    update_interval: 60s
+#    device_class: moisture
+#    lambda: |-
+#      if (id(percentual_var).state > 100) {
+#      return 100;
+#      } else if (id(percentual_var).state < 0) {
+#      return 0;
+#      } else {
+#      return id(percentual_var).state;
+#      }
