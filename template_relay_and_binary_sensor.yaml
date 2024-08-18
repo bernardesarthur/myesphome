@@ -1,5 +1,5 @@
 esphome:
-  name: template_relay_and_binary_sensor
+  name: relay_and_binary_sensor
   friendly_name: Template Relay and Binary Sensor
 
 esp8266:
@@ -82,15 +82,15 @@ switch:
       inverted: False
     name: Button Press
     id: buttonpress
-    internal: False
+    internal: True
     disabled_by_default: False
     restore_mode: ALWAYS_OFF
-#    on_turn_on:
-#    - delay: 500ms
-#    - switch.turn_off: relay_2
 
   - platform: template
     name: Click
+    id: click
+    internal: False
+    disabled_by_default: False
     lambda: |-
       if (id(buttonpress).state) {
         return true;
@@ -106,6 +106,9 @@ switch:
 
   - platform: template
     name: Hold
+    id: hold
+    internal: False
+    disabled_by_default: False
     lambda: |-
       if (id(buttonpress).state) {
         return true;
