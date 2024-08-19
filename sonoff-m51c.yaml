@@ -53,6 +53,8 @@ switch:
       - output.turn_on: led_1
 #    - delay: 500ms
 #    - switch.turn_off: relay_1
+    on_turn_off:
+      - output.turn_off: led_1
 
 output:
   - platform: gpio

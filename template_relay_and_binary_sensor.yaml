@@ -31,9 +31,6 @@ binary_sensor:
     on_press: 
       then:
         - switch.toggle: buttonpress
-    on_release: 
-      then:
-        - switch.toggle: buttonpress
     on_multi_click: 
       - timing: 
           - ON for at least 2s
