@@ -100,3 +100,24 @@ sensor:
 #      } else {
 #      return id(percentual_var).state;
 #      }
+
+#uart:
+#    rx_pin: 7 
+#    baud_rate: 9600 
+ 
+#sensor: 
+#  - platform: a02yyuw 
+#    id: a02yyuw_sensor 
+#    name: "Water level" 
+#    unit_of_measurement: 'm' 
+#    accuracy_decimals: 1 
+#    filters: 
+#      - multiply: 0.001 
+#      - throttle: 5s 
+#      - heartbeat: 5s 
+#      - quantile: 
+#         window_size: 7 
+#         send_every: 4 
+#         send_first_at: 3 
+#         quantile: .9 
+#      - debounce: 0.1s 
