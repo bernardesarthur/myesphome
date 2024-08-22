@@ -81,13 +81,12 @@ text_sensor:
       entity_category: diagnostic
       internal: False
       disabled_by_default: False
-      update_inverval: 60s
+      update_interval: 60s
   - platform: version
     name: Esphome version
     internal: False
     disabled_by_default: False
     hide_timestamp: True
-    update_interval: 60s
 
 sensor:
   - platform: uptime
