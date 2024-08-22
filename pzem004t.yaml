@@ -72,7 +72,11 @@ sensor:
       id: pzem_fase_1_fator_de_potencia
       internal: False
       disabled_by_default: False
-    update_interval: 2s    
+    update_interval:
+      milliseconds: 0
+      seconds: 2
+      minutes: 0
+      hours: 0   
     address: 1
 
   - platform: pzemac
@@ -111,6 +115,11 @@ sensor:
       id: pzem_fase_1_fator_de_potencia
       internal: False
       disabled_by_default: False 
+    update_interval:
+      milliseconds: 0
+      seconds: 1
+      minutes: 0
+      hours: 0
     address: 1
 
   - platform: template
@@ -122,7 +131,11 @@ sensor:
     lambda: |-
       return (id(pzem_fase_1_energia).state + id(pzem_fase_2_energia).state);
     unit_of_measurement: kWh
-    update_interval: 1s
+    update_interval:
+      milliseconds: 0
+      seconds: 1
+      minutes: 0
+      hours: 0
     
   - platform: template
     name: Total de Corrente
@@ -133,7 +146,11 @@ sensor:
     lambda: |-
       return (id(pzem_fase_1_corrente).state + id(pzem_fase_2_corrente).state);
     unit_of_measurement: A
-    update_interval: 1s
+    update_interval:
+      milliseconds: 0
+      seconds: 1
+      minutes: 0
+      hours: 0
     
   - platform: template
     name: Total de Potência
@@ -144,7 +161,11 @@ sensor:
     lambda: |-
       return (id(pzem_fase_1_potencia).state + id(pzem_fase_2_potencia).state);
     unit_of_measurement: W
-    update_interval: 1s
+    update_interval:
+      milliseconds: 0
+      seconds: 1
+      minutes: 0
+      hours: 0
     
   - platform: template
     name: Média de Tensão
@@ -155,7 +176,11 @@ sensor:
     lambda: |-
       return (id(pzem_fase_1_tensao).state + id(pzem_fase_2_tensao).state)/2;
     unit_of_measurement: V
-    update_interval: 1s
+    update_interval:
+      milliseconds: 0
+      seconds: 1
+      minutes: 0
+      hours: 0
 
   - platform: total_daily_energy
     name: "Pzem total energia diária"

@@ -31,7 +31,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
     on_press: 
       then:
         switch.toggle: relay_1
@@ -42,35 +46,55 @@ sensor:
       name: voltage
       id: voltage
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     current:
       name: Current
       id: current
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     power:
       name: Power
       id: power
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     energy:
       name: Energy
       id: energy
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     apparent_power:
       name: Apparent Power
       id: apparent_power
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
 

@@ -13,6 +13,40 @@ time:
   - platform: homeassistant
     id: esphome_time
 
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Sao_Paulo
+#    timezone: "GMT+3"
+    update_interval: 60s
+    servers:
+     - a.st1.ntp.br
+     - b.st1.ntp.br
+     - c.st1.ntp.br
+
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 6
+        days_of_week: 
+          - 1  # Segunda-feira
+          - 3  # Quarta-feira
+          - 5  # Sexta-feira
+        then:
+          - switch.turn_off: my_switch
+          - delay:
+              seconds: 0
+              minutes: 1
+              hours: 0  # Aguardar 1 minuto
+          - switch.turn_on: my_switch
+
+0 = Domingo
+1 = Segunda-feira
+2 = Terça-feira
+3 = Quarta-feira
+4 = Quinta-feira
+5 = Sexta-feira
+6 = Sábado
+
 interval:
   - interval: 1min
     then:

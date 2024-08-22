@@ -36,13 +36,29 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
     on_click:
-      - max_length: 350ms
+      - max_length:
+          milliseconds: 350
+          seconds: 0
+          minutes: 0
+          hours: 0
         then:
           switch.toggle: relay_1
-      - min_length: 360ms
-        max_length: 3s
+      - min_length:
+          milliseconds: 360
+          seconds: 0
+          minutes: 0
+          hours: 0
+        max_length:
+          milliseconds: 0
+          seconds: 3
+          minutes: 0
+          hours: 0
         then:
           - if:
               condition:
@@ -109,35 +125,55 @@ sensor:
       name: voltage
       id: voltage
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     current:
       name: Current
       id: current
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     power:
       name: Power
       id: power
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     energy:
       name: Energy
       id: energy
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
     apparent_power:
       name: Apparent Power
       id: apparent_power
       filters:
-        - throttle_average: 5s
+        - throttle_average:
+            milliseconds: 0
+            seconds: 5
+            minutes: 0
+            hours: 0
       internal: False
       disabled_by_default: False
 
@@ -152,10 +188,18 @@ switch:
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
-      - delay: 500ms
+      - delay: 
+          milliseconds: 500
+          seconds: 0
+          minutes: 0
+          hours: 0
       - light.turn_on: switch_led
     on_turn_off:
-      - delay: 500ms
+      - delay: 
+          milliseconds: 500
+          seconds: 0
+          minutes: 0
+          hours: 0
       - light.turn_off: switch_led
 
 light:

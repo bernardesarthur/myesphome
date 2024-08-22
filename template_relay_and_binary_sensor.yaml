@@ -27,7 +27,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
     on_press: 
       then:
         - switch.toggle: buttonpress
@@ -46,7 +50,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     on_press:
-      - delay: 500ms
+      - delay:
+          milliseconds: 500
+          seconds: 0
+          minutes: 0
+          hours: 0
       - binary_sensor.template.publish:
           id: long_press
           state: OFF
@@ -62,7 +70,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
     on_press: 
       then:
         - switch.toggle: buttonpress
@@ -98,7 +110,11 @@ switch:
       }
     turn_on_action:
       - switch.turn_on: buttonpress
-      - delay: 1s
+      - delay:
+          milliseconds: 0
+          seconds: 1
+          minutes: 0
+          hours: 0
       - switch.turn_off: buttonpress
     turn_off_action:
       - switch.turn_off: buttonpress
@@ -118,7 +134,11 @@ switch:
       }
     turn_on_action:
       - switch.turn_on: buttonpress
-      - delay: 5s
+      - delay:
+          milliseconds: 0
+          seconds: 5
+          minutes: 0
+          hours: 0
       - switch.turn_off: buttonpress
     turn_off_action:
       - switch.turn_off: buttonpress

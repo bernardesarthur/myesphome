@@ -29,7 +29,11 @@ binary_sensor:
     device_class: problem
     entity_category: diagnostic
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
 
 sensor:
   - platform: ultrasonic
@@ -38,7 +42,11 @@ sensor:
     internal: True
     id: ultrassonico
     disabled_by_default: False
-    update_interval: 60s
+    update_interval:
+      milliseconds: 0
+      seconds: 60
+      minutes: 0
+      hours: 0
 #    pulse_time: 20us
 #    timeout: 1.0m
     unit_of_measurement: "m"
@@ -52,7 +60,11 @@ sensor:
     unit_of_measurement: "m"
     device_class: distance
     accuracy_decimals: 2
-    update_interval: 60s
+    update_interval:
+      milliseconds: 0
+      seconds: 60
+      minutes: 0
+      hours: 0
 
   - platform: template
     id: percentual_var
@@ -70,7 +82,11 @@ sensor:
         return valor;
       }
     accuracy_decimals: 1
-    update_interval: 60s
+    update_interval:
+      milliseconds: 0
+      seconds: 60
+      minutes: 0
+      hours: 0
     device_class: moisture
 
 #  - platform: template
@@ -80,7 +96,11 @@ sensor:
 #    unit_of_measurement: "%"
 #    lambda: return ((id(nivel).state/0.65)*100);
 #    accuracy_decimals: 1
-#    update_interval: 60s
+#   update_interval:
+#      milliseconds: 0
+#      seconds: 60
+#      minutes: 0
+#      hours: 0
 #    device_class: moisture
 
 #  - platform: template
@@ -90,7 +110,11 @@ sensor:
 #    name: Percentual
 #    unit_of_measurement: "%"
 #    accuracy_decimals: 1
-#    update_interval: 60s
+#   update_interval:
+#      milliseconds: 0
+#      seconds: 60
+#      minutes: 0
+#      hours: 0
 #    device_class: moisture
 #    lambda: |-
 #      if (id(percentual_var).state > 100) {

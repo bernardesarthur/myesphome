@@ -34,7 +34,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
     on_press: 
       then:
         switch.toggle: relay_1
@@ -50,7 +54,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
     on_press: 
       then:
         switch.toggle: relay_2
@@ -66,7 +74,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
     on_press: 
       then:
         switch.toggle: relay_3
@@ -82,7 +94,11 @@ switch:
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
 #    on_turn_on:
-#    - delay: 500ms
+#    - delay:
+#        milliseconds: 500
+#        seconds: 0
+#        minutes: 0
+#        hours: 0
 #    - switch.turn_off: relay_1
 
   - platform: gpio
@@ -95,7 +111,11 @@ switch:
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
 #    on_turn_on:
-#    - delay: 500ms
+#    - delay:
+#        milliseconds: 500
+#        seconds: 0
+#        minutes: 0
+#        hours: 0
 #    - switch.turn_off: relay_2
 
   - platform: gpio
@@ -108,7 +128,11 @@ switch:
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
 #    on_turn_on:
-#    - delay: 500ms
+#    - delay:
+#        milliseconds: 500
+#        seconds: 0
+#        minutes: 0
+#        hours: 0
 #    - switch.turn_off: relay_3
 
   - platform: template

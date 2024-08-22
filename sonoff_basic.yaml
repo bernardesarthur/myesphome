@@ -16,21 +16,25 @@ packages:
       - base.yaml
 
 binary_sensor:
-- platform: gpio
-  pin:
-    number: GPIO0
-    mode: INPUT_PULLUP
-    inverted: True
-  id: button_1
-  name: Button 1
-  internal: False
-  disabled_by_default: False
-  publish_initial_state: True
-  filters: 
-    - delayed_on_off: 10ms
-  on_press: 
-    then:
-    -  switch.toggle: relay_1
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
+    on_press: 
+      then:
+      -  switch.toggle: relay_1
 
 switch:
   - platform: gpio
@@ -43,7 +47,11 @@ switch:
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
 #    on_turn_on:
-#    - delay: 500ms
+#    - delay:
+#        milliseconds: 500
+#        seconds: 0
+#        minutes: 0
+#        hours: 0
 #    - switch.turn_off: relay_1
 
 status_led:

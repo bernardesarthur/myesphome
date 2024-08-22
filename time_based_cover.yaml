@@ -34,7 +34,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
 
   - platform: gpio
     pin:
@@ -47,7 +51,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
 
   - platform: gpio
     pin:
@@ -60,7 +68,11 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on_off:
+          milliseconds: 10
+          seconds: 0
+          minutes: 0
+          hours: 0
       
 switch:
   - platform: gpio
@@ -74,7 +86,11 @@ switch:
     restore_mode: ALWAYS_OFF
     interlock: &interlock_group_1 [relay_1, relay_2]
     on_turn_on:
-    - delay: 2min
+    - delay:
+        milliseconds: 0
+        seconds: 0
+        minutes: 2
+        hours: 0
     - switch.turn_off: relay_1
 
   - platform: gpio
@@ -88,7 +104,11 @@ switch:
     restore_mode: ALWAYS_OFF
     interlock: *interlock_group_1
     on_turn_on:
-    - delay: 2min
+    - delay:
+        milliseconds: 0
+        seconds: 0
+        minutes: 2
+        hours: 0
     - switch.turn_off: relay_2
 
 status_led:
@@ -110,7 +130,11 @@ cover:
             lambda: 'return !id(contact).state;'
           then:
               - switch.turn_on: relay_1
-    open_duration: 2min
+    open_duration:
+      milliseconds: 0
+      seconds: 0
+      minutes: 2
+      hours: 0
     close_action:
       then:
        - if:
@@ -118,7 +142,11 @@ cover:
             lambda: 'return id(contact).state;'
           then:
             - switch.turn_on: relay_2
-    close_duration: 2min
+    close_duration:
+      milliseconds: 0
+      seconds: 0
+      minutes: 2
+      hours: 0
     stop_action:
       - switch.turn_off: relay_1
       - switch.turn_off: relay_2
