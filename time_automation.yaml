@@ -9,6 +9,21 @@ Isto é devido a um erro do ESPHome.
 Aonde está timezone: America/Sao_Paulo, mude para timezone: "GMT+3"
 Note que intencionalmente inverti o sinal do fuso horário devido a um erro no ESPHome.
 
+some_config_option:
+  some_time_option: 1000us  # 1000 microseconds = 1ms
+  some_time_option: 1000ms  # 1000 milliseconds
+  some_time_option: 1.5s  # 1.5 seconds
+  some_time_option: 0.5min  # half a minute
+  some_time_option: 2h  # 2 hours
+
+  # Make sure you wrap these in quotes
+  some_time_option: '2:01'  # 2 hours 1 minute
+  some_time_option: '2:01:30'  # 2 hours 1 minute 30 seconds
+
+  # for all 'update_interval' options, also
+  update_interval: never  # never update
+  update_interval: 0ms  # update in every loop() iteration
+
 time:
   - platform: homeassistant
     id: esphome_time

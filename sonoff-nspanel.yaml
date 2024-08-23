@@ -32,21 +32,13 @@ web_server:
 time:
   - platform: homeassistant
     id: homeassistant_time
-    update_interval:
-      milliseconds: 0
-      seconds: 60
-      minutes: 0
-      hours: 0
+    update_interval: 60s
 
   - platform: sntp
     id: sntp_time
     timezone: America/Sao_Paulo
 #    timezone: "GMT+3"
-    update_interval:
-      milliseconds: 0
-      seconds: 60
-      minutes: 0
-      hours: 0
+    update_interval: 60s
     servers:
      - a.st1.ntp.br
      - b.st1.ntp.br
@@ -85,11 +77,13 @@ text_sensor:
       entity_category: diagnostic
       internal: False
       disabled_by_default: False
+      update_interval: 60s
     ssid: 
       name: SSID
       entity_category: diagnostic
       internal: False
       disabled_by_default: False
+      update_interval: 60s
   - platform: version
     name: Esphome version
     internal: False
@@ -102,11 +96,7 @@ sensor:
     id: uptime_sensor
     internal: False
     disabled_by_default: False
-    update_interval:
-      milliseconds: 0
-      seconds: 60
-      minutes: 0
-      hours: 0
+    update_interval: 60s
     entity_category: diagnostic
   
   - platform: wifi_signal
@@ -114,11 +104,7 @@ sensor:
     id: wifi_signal_dbm
     internal: False
     disabled_by_default: False
-    update_interval:
-      milliseconds: 0
-      seconds: 60
-      minutes: 0
-      hours: 0
+    update_interval: 60s
     entity_category: diagnostic
     device_class: signal_strength
 

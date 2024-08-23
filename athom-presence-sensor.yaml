@@ -48,11 +48,7 @@ button:
     disabled_by_default: False
     on_press:
       - button.press: restart_mmwave
-      - delay:
-          milliseconds: 0
-          seconds: 1
-          minutes: 0
-          hours: 0
+      - delay: 1s
       - button.press: restart_esp
 
 binary_sensor:
@@ -67,16 +63,8 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on:
-          milliseconds: 50
-          seconds: 0
-          minutes: 0
-          hours: 0
-      - delayed_off:
-          milliseconds: 0
-          seconds: 10
-          minutes: 0
-          hours: 0
+      - delayed_on: 50ms
+      - delayed_off: 10s
     on_press:
       then:
         - light.turn_on: led
@@ -92,11 +80,7 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off:
-          milliseconds: 10
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delayed_on_off: 10ms
 
   - platform: gpio
     pin:
@@ -108,11 +92,7 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters:
-      - delayed_on:
-          milliseconds: 50
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delayed_on: 50ms
     device_class: motion
     on_release:
       then:
@@ -173,25 +153,13 @@ number:
     mode: slider
     set_action:
       - switch.turn_off: mmwave_sensor
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: !lambda
           std::string ranges = "setRange 1.8 " + str_sprintf("%.1f",id(Farthest_Detection).state) + "\r\n";
           return std::vector<uint8_t>(ranges.begin(), ranges.end());
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: "saveConfig\r\n"
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - switch.turn_on: mmwave_sensor
 
   - platform: template
@@ -207,25 +175,13 @@ number:
     mode: slider
     set_action:
       - switch.turn_off: mmwave_sensor
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: !lambda
           std::string sensitivitys = "setSensitivity " + str_sprintf("%.0f",id(Maintain_Sensitivity).state) + " " + str_sprintf("%.0f",id(Trigger_Sensitivity).state) + "\r\n";
           return std::vector<uint8_t>(sensitivitys.begin(), sensitivitys.end());
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: "saveConfig\r\n"
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - switch.turn_on: mmwave_sensor
 
 
@@ -242,25 +198,13 @@ number:
     mode: slider
     set_action:
       - switch.turn_off: mmwave_sensor
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: !lambda
           std::string sensitivityss = "setSensitivity " + str_sprintf("%.0f",id(Maintain_Sensitivity).state) + " " + str_sprintf("%.0f",id(Trigger_Sensitivity).state) + "\r\n";
           return std::vector<uint8_t>(sensitivityss.begin(), sensitivityss.end());
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: "saveConfig\r\n"
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - switch.turn_on: mmwave_sensor
 
   - platform: template
@@ -277,25 +221,13 @@ number:
     mode: slider
     set_action:
       - switch.turn_off: mmwave_sensor
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: !lambda |-
           std::string detections = "setLatency " + str_sprintf("%.1f",id(Detection_Delay).state) + " " + str_sprintf("%.0f",id(Fading_Time).state) + "\r\n";
           return std::vector<uint8_t>(detections.begin(),detections.end());
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: "saveConfig\r\n"
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - switch.turn_on: mmwave_sensor
 
   - platform: template
@@ -312,25 +244,13 @@ number:
     mode: auto
     set_action:
       - switch.turn_off: mmwave_sensor
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: !lambda |-
           std::string fadings = "setLatency " + str_sprintf("%.1f",id(Detection_Delay).state) + " " + str_sprintf("%.0f",id(Fading_Time).state) + "\r\n";
           return std::vector<uint8_t>(fadings.begin(), fadings.end());
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: "saveConfig\r\n"
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - switch.turn_on: mmwave_sensor
 
   - platform: template
@@ -347,25 +267,13 @@ number:
     mode: slider
     set_action:
       - switch.turn_off: mmwave_sensor
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: !lambda
           std::string blockades = "setInhibit " + str_sprintf("%.0f",x) + "\r\n";
           return std::vector<uint8_t>(blockades.begin(), blockades.end());
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - uart.write: "saveConfig\r\n"
-      - delay:
-          milliseconds: 500
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delay: 500ms
       - switch.turn_on: mmwave_sensor
 
 light:

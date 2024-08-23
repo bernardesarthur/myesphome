@@ -41,11 +41,7 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off:
-          milliseconds: 10
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delayed_on_off: 10ms
     on_press: 
       then:
         switch.toggle: relay_1
@@ -66,11 +62,7 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off:
-          milliseconds: 10
-          seconds: 0
-          minutes: 0
-          hours: 0
+      - delayed_on_off: 10ms
     on_press: 
       then:
         - switch.toggle: relay_2
@@ -89,88 +81,56 @@ sensor:
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
     current_1:
       name: Current 1
       id: current_1
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
     current_2:
       name: Current 2
       id: current_2
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
     active_power_1:
       name: Power 1
       id: power_1
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
     active_power_2:
       name: Power 2
       id: power_2
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
     energy_1:
       name: Energy 1
       id: energy_1
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
     energy_2:
       name: Energy 2
       id: energy_2
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
     energy_total:
       name: Energy Total
       id: energy_total
       internal: False
       disabled_by_default: False
       filters:
-        - throttle_average:
-            milliseconds: 0
-            seconds: 5
-            minutes: 0
-            hours: 0
+        - throttle_average: 5s
 
   - platform: template
     name: Power Factor 1
@@ -199,12 +159,9 @@ switch:
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
 #    interlock: &interlock_group_1 [relay_1, relay_2]
+#    interlock_wait_time: 0ms
 #    on_turn_on:
-#    - delay:
-#        milliseconds: 500
-#        seconds: 0
-#        minutes: 0
-#        hours: 0
+#    - delay: 500ms
 #    - switch.turn_off: relay_1
 
   - platform: gpio
@@ -217,12 +174,9 @@ switch:
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
 #    interlock: *interlock_group_1
+#    interlock_wait_time: 0ms
 #    on_turn_on:
-#    - delay:
-#        milliseconds: 500
-#        seconds: 0
-#        minutes: 0
-#        hours: 0
+#    - delay: 500ms
 #    - switch.turn_off: relay_2
 
   - platform: template
