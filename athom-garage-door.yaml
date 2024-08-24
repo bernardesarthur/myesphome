@@ -64,6 +64,10 @@ cover:
     device_class: garage
     name: "Garage Door"
     lambda: "return id(contact).state ? COVER_OPEN : COVER_CLOSED;"
+    internal: False
+    disabled_by_default: False
+    optimistic: True
+    assumed_state: False
     open_action:
       then:
        - if:
