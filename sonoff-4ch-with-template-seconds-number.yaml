@@ -178,6 +178,7 @@ number:
     optimistic: True
     disabled_by_default: False
     internal: False
+    restore_value: True
 
   - platform: template
     name: Delay Time 2
@@ -189,6 +190,7 @@ number:
     optimistic: True
     disabled_by_default: False
     internal: False
+    restore_value: True
 
   - platform: template
     name: Delay Time 3
@@ -200,6 +202,7 @@ number:
     optimistic: True
     disabled_by_default: False
     internal: False
+    restore_value: True
 
   - platform: template
     name: Delay Time 4
@@ -211,6 +214,7 @@ number:
     optimistic: True
     disabled_by_default: False
     internal: False
+    restore_value: True
 
 status_led:
   pin: 
