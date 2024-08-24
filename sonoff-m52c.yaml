@@ -80,7 +80,7 @@ switch:
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
       - output.turn_on: led_2
- #     - delay: 500ms
+#      - delay: 500ms
 #      - switch.turn_off: relay_1
     on_turn_off:
       - output.turn_off: led_2
