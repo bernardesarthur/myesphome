@@ -1,0 +1,218 @@
+esphome:
+  name: sonoff-4ch-with-template-number
+  friendly_name: Sonoff 4CH with Template Number
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: True
+  early_pin_init: False
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_1
+
+  - platform: gpio
+    pin:
+      number: GPIO9
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_2
+    name: Button 2
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_2
+
+  - platform: gpio
+    pin:
+      number: GPIO10
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_3
+    name: Button 3
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_3
+
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_4
+    name: Button 4
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_4
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO12
+      inverted: False
+    name: Relay 1
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: &interlock_group_1 [relay_1, relay_2]
+#    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: !lambda "return id(delay_time_1).state * 60 * 1000;"
+    - switch.turn_off: relay_1
+
+  - platform: gpio
+    pin:
+      number: GPIO5
+      inverted: False
+    name: Relay 2
+    id: relay_2
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: *interlock_group_1
+#    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: !lambda "return id(delay_time_2).state * 60 * 1000;"
+    - switch.turn_off: relay_2
+
+  - platform: gpio
+    pin:
+      number: GPIO4
+      inverted: False
+    name: Relay 3
+    id: relay_3
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: &interlock_group_2 [relay_3, relay_4]
+#    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: !lambda "return id(delay_time_3).state * 60 * 1000;"
+    - switch.turn_off: relay_3
+
+  - platform: gpio
+    pin:
+      number: GPIO15
+      inverted: False
+    name: Relay 4
+    id: relay_4
+    internal: False
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: *interlock_group_2
+#    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: !lambda "return id(delay_time_4).state * 60 * 1000;"
+    - switch.turn_off: relay_4
+
+  - platform: template
+    name: Todos
+    id: todos
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(relay_1).state || id(relay_2).state || id(relay_3).state || id(relay_4).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      then:
+        - switch.turn_on: relay_1
+        - switch.turn_on: relay_2
+        - switch.turn_on: relay_3
+        - switch.turn_on: relay_4
+    turn_off_action:
+      then:
+        - switch.turn_off: relay_1
+        - switch.turn_off: relay_2
+        - switch.turn_off: relay_3
+        - switch.turn_off: relay_4
+
+number:
+  - platform: template
+    name: Delay Time 1
+    id: delay_time_1
+    min_value: 0
+    max_value: 60
+    step: 1
+    unit_of_measurement: "min"
+    optimistic: True
+    disabled_by_default: False
+    internal: False
+
+  - platform: template
+    name: Delay Time 2
+    id: delay_time_2
+    min_value: 0
+    max_value: 60
+    step: 1
+    unit_of_measurement: "min"
+    optimistic: True
+    disabled_by_default: False
+    internal: False
+
+  - platform: template
+    name: Delay Time 3
+    id: delay_time_3
+    min_value: 0
+    max_value: 60
+    step: 1
+    unit_of_measurement: "min"
+    optimistic: True
+    disabled_by_default: False
+    internal: False
+
+  - platform: template
+    name: Delay Time 4
+    id: delay_time_4
+    min_value: 0
+    max_value: 60
+    step: 1
+    unit_of_measurement: "min"
+    optimistic: True
+    disabled_by_default: False
+    internal: False
+
+status_led:
+  pin: 
+    number: GPIO13
+    inverted: False
