@@ -265,6 +265,28 @@ sensor:
           else return (x);
     accuracy_decimals: 0
 
+sensor:
+  - platform: dht
+    pin: D2
+    temperature:
+      name: "Temperatura DHT22"
+      id: temp_dht22
+      filters:
+        - offset: 1.5  # Offset positivo de 1.5 graus
+        # ou
+        - offset: -2.0  # Offset negativo de 2.0 graus
+    humidity:
+      name: "Umidade DHT22"
+      id: hum_dht22
+      filters:
+        - offset: 3.0  # Offset positivo de 3.0%
+        - offset: -3.0  # Offset negativo de 3.0%
+
+sensor:
+  - platform: template
+    name: "Temperatura Corrigida"
+    lambda: |-
+      return id(temp_dht22).state + 1.5;  # Aplica um offset de +1.5
 
 switch:
   - platform: gpio
