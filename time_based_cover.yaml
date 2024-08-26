@@ -34,7 +34,8 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on: 10ms
+      - delayed_off: 10ms
 
   - platform: gpio
     pin:
@@ -47,7 +48,8 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on: 10ms
+      - delayed_off: 10ms
 
   - platform: gpio
     pin:
@@ -60,7 +62,8 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on: 10ms
+      - delayed_off: 10ms
       
 switch:
   - platform: gpio

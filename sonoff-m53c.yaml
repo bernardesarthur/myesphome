@@ -34,7 +34,8 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on: 10ms
+      - delayed_off: 10ms
     on_press: 
       then:
         switch.toggle: relay_1
@@ -50,7 +51,8 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on: 10ms
+      - delayed_off: 10ms
     on_press: 
       then:
         switch.toggle: relay_2
@@ -66,7 +68,8 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     filters: 
-      - delayed_on_off: 10ms
+      - delayed_on: 10ms
+      - delayed_off: 10ms
     on_press: 
       then:
         switch.toggle: relay_3
