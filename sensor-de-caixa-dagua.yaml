@@ -91,7 +91,7 @@ sensor:
 #    name: Percentual
 #    unit_of_measurement: "%"
 #    accuracy_decimals: 1
-#   update_interval: 60s
+#    update_interval: 60s
 #    device_class: moisture
 #    lambda: |-
 #      if (id(percentual_var).state > 100) {

@@ -77,9 +77,9 @@ switch:
     internal: False
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
-#    on_turn_on:
-#    - delay: 500ms
-#    - switch.turn_off: relay_1
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_1
 
   - platform: gpio
     pin:
@@ -90,9 +90,9 @@ switch:
     internal: False
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
-#    on_turn_on:
-#    - delay: 500ms
-#    - switch.turn_off: relay_1
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_1
 
   - platform: gpio
     pin:
@@ -103,9 +103,9 @@ switch:
     internal: False
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
-#    on_turn_on:
-#    - delay: 500ms
-#    - switch.turn_off: relay_1
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_1
 
   - platform: template
     name: Todos

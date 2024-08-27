@@ -77,11 +77,11 @@ switch:
     internal: False
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
-#    interlock: &interlock_group_1 [relay_1, relay_2]
-#    interlock_wait_time: 0ms
-#    on_turn_on:
-#    - delay: 500ms
-#    - switch.turn_off: relay_1
+    interlock: &interlock_group_1 [relay_1, relay_2]
+    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_1
 
   - platform: gpio
     pin:
@@ -92,10 +92,11 @@ switch:
     internal: False
     disabled_by_default: False
     restore_mode: RESTORE_DEFAULT_OFF
-#    interlock: *interlock_group_1
-#    interlock_wait_time: 0ms
-#    - delay: 500ms
-#    - switch.turn_off: relay_2
+    interlock: *interlock_group_1
+    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_2
 
   - platform: template
     name: Todos
