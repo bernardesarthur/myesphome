@@ -4,6 +4,7 @@ preferences:
   flash_write_interval: 1min
 
 logger:
+  baud_rate: 0
 
 api:
 
