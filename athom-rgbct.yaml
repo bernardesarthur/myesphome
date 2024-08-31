@@ -15,6 +15,10 @@ packages:
     files:
       - base.yaml
 
+#Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
 output:
   - platform: esp8266_pwm
     id: red_output
