@@ -48,10 +48,7 @@ time:
           - 5  # Sexta-feira
         then:
           - switch.turn_off: my_switch
-          - delay:
-              seconds: 0
-              minutes: 1
-              hours: 0  # Aguardar 1 minuto
+          - delay: 1min # Aguardar 1 minuto
           - switch.turn_on: my_switch
 
 0 = Domingo

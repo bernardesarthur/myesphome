@@ -53,6 +53,7 @@ switch:
     id: relay_1
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
     - output.turn_on: led_1
@@ -84,6 +85,7 @@ light:
       inverted: True
     internal: True
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: ALWAYS_OFF
 
   - platform: monochromatic
@@ -92,5 +94,6 @@ light:
     id: leds
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config

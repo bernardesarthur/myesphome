@@ -55,6 +55,7 @@ light:
     internal: False
     disabled_by_default: False
     name: RGBCT Light
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_ON
     red: red_output
     green: green_output

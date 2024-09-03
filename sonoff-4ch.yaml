@@ -97,6 +97,7 @@ switch:
     id: relay_1
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     interlock: &interlock_group_1 [relay_1, relay_2]
     interlock_wait_time: 0ms
@@ -112,6 +113,7 @@ switch:
     id: relay_2
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     interlock: *interlock_group_1
     interlock_wait_time: 0ms
@@ -127,6 +129,7 @@ switch:
     id: relay_3
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     interlock: &interlock_group_2 [relay_3, relay_4]
     interlock_wait_time: 0ms
@@ -142,6 +145,7 @@ switch:
     id: relay_4
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     interlock: *interlock_group_2
     interlock_wait_time: 0ms
@@ -155,6 +159,7 @@ switch:
     internal: False
     disabled_by_default: False
     optimistic: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: DISABLED
     lambda: |-
       if (id(relay_1).state || id(relay_2).state || id(relay_3).state || id(relay_4).state) {

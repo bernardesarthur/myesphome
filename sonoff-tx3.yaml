@@ -80,6 +80,7 @@ switch:
     id: relay_1
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
     - delay: 500ms
@@ -93,6 +94,7 @@ switch:
     id: relay_2
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
     - delay: 500ms
@@ -106,6 +108,7 @@ switch:
     id: relay_3
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
     - delay: 500ms
@@ -117,6 +120,7 @@ switch:
     internal: False
     disabled_by_default: False
     optimistic: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: DISABLED
     lambda: |-
       if (id(relay_1).state || id(relay_2).state || id(relay_3).state) {

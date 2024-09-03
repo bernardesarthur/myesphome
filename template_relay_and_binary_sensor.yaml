@@ -87,6 +87,7 @@ switch:
     id: buttonpress
     internal: True
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: ALWAYS_OFF
 
   - platform: template
@@ -94,6 +95,7 @@ switch:
     id: click
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: DISABLED
     optimistic: False
     lambda: |-
@@ -114,6 +116,7 @@ switch:
     id: hold
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: DISABLED
     optimistic: False
     lambda: |-

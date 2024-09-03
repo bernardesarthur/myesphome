@@ -46,6 +46,7 @@ switch:
     id: relay_1
     internal: False
     disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
     - delay: 500ms
