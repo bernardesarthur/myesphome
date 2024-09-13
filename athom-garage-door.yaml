@@ -73,7 +73,7 @@ cover:
     lambda: "return id(contact).state ? COVER_OPEN : COVER_CLOSED;"
     internal: False
     disabled_by_default: False
-    optimistic: True
+    optimistic: False
     assumed_state: False
     open_action:
       then:
