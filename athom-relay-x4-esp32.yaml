@@ -1,0 +1,190 @@
+esphome:
+  name: athom-relay-x4
+  friendly_name: Athom Relay X4
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32dev
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+    version: recommended
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+#Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO36
+      mode: INPUT
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_1
+
+  - platform: gpio
+    pin:
+      number: GPIO39
+      mode: INPUT
+      inverted: True
+    id: button_2
+    name: Button 2
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_2
+
+  - platform: gpio
+    pin:
+      number: GPIO34
+      mode: INPUT
+      inverted: True
+    id: button_3
+    name: Button 3
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_3
+
+  - platform: gpio
+    pin:
+      number: GPIO35
+      mode: INPUT
+      inverted: True
+    id: button_4
+    name: Button 4
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_4
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO27
+      inverted: False
+    name: Relay 1
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: &interlock_group_1 [relay_1, relay_2]
+    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_1
+
+  - platform: gpio
+    pin:
+      number: GPIO14
+      inverted: False
+    name: Relay 2
+    id: relay_2
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: *interlock_group_1
+    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_2
+
+  - platform: gpio
+    pin:
+      number: GPIO12
+      inverted: False
+    name: Relay 3
+    id: relay_3
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: &interlock_group_2 [relay_3, relay_4]
+    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_3
+
+  - platform: gpio
+    pin:
+      number: GPIO13
+      inverted: False
+    name: Relay 4
+    id: relay_4
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: *interlock_group_2
+    interlock_wait_time: 0ms
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_4
+
+  - platform: template
+    name: Todos
+    id: todos
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(relay_1).state || id(relay_2).state || id(relay_3).state || id(relay_4).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      then:
+        - switch.turn_on: relay_1
+        - switch.turn_on: relay_2
+        - switch.turn_on: relay_3
+        - switch.turn_on: relay_4
+    turn_off_action:
+      then:
+        - switch.turn_off: relay_1
+        - switch.turn_off: relay_2
+        - switch.turn_off: relay_3
+        - switch.turn_off: relay_4
+
+status_led:
+  pin: 
+    number: GPIO15
+    inverted: False
