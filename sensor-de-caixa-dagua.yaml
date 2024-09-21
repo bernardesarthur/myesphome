@@ -41,6 +41,7 @@ sensor:
     trigger_pin: GPIO4
     echo_pin: GPIO5
     internal: True
+    disabled_by_default: False
     id: ultrassonico
     update_interval: 60s
     unit_of_measurement: "m"
