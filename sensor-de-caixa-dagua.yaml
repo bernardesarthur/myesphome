@@ -15,7 +15,7 @@ packages:
     files:
       - base.yaml
 
-#Add after install on device
+# Add after install on device
 wifi:
   use_address: 192.168.212.223
 
@@ -42,11 +42,16 @@ sensor:
     echo_pin: GPIO5
     internal: True
     id: ultrassonico
-    disabled_by_default: False
     update_interval: 60s
+    unit_of_measurement: "m"
+    filters:
+      - median:
+          window_size: 5
+          send_every: 1
+          send_first_at: 1
+    # Configurações opcionais do sensor de ultrassom
 #    pulse_time: 20us
 #    timeout: 1.0m
-    unit_of_measurement: "m"
 
   - platform: template
     id: nivel
