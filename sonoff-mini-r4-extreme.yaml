@@ -1,0 +1,87 @@
+esphome:
+  name: sonoff-mini-extreme-r4
+  friendly_name: Sonoff Mini Extreme R4
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+#Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press: 
+      then:
+        switch.toggle: relay_1
+        
+  - platform: gpio
+    pin: 
+      number: GPIO27
+      mode: INPUT_PULLUP
+      inverted: True
+    id: switch_1
+    name: Switch 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press: 
+      then:
+        - switch.toggle: relay_1
+    on_release: 
+      then:
+        - switch.toggle: relay_1
+
+# Se for pulsador remover o on_release
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO26
+      inverted: False
+    name: Relay 1
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay_1
+
+status_led:
+  pin: 
+    number: GPIO19
+    inverted: False
