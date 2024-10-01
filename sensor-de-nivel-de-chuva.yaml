@@ -47,8 +47,10 @@ binary_sensor:
 
   - platform: template
     name: Chuva Forte
+    id: chuva_forte
     internal: False
     disabled_by_default: False
+    publish_initial_state: True
     lambda: |-
       if (id(intensidade_chuva).state == 3) {
         return true;  // Chuva forte detectada

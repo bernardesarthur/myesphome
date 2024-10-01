@@ -73,6 +73,7 @@ binary_sensor:
     name: Status
     internal: False
     disabled_by_default: False
+    publish_initial_state: True
 
 text_sensor:
   - platform: wifi_info
