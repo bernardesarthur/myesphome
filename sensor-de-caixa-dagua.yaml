@@ -18,6 +18,15 @@ packages:
 # Add after install on device
 wifi:
   use_address: 192.168.212.223
+  # Desabilita a re-conexão contínua à rede para economizar energia (somente se for a bateria)
+  fast_connect: True
+  # NONE or LIGHT or HIGH
+  power_save_mode: HIGH
+
+# Deep Sleep para economizar bateria (somente se for a bateria)
+deep_sleep:
+  run_duration: 5s  # Tempo que o ESP8266 ficará ligado
+  sleep_duration: 60s  # Tempo de sono antes de ligar novamente
 
 binary_sensor:
   - platform: gpio
@@ -83,6 +92,36 @@ sensor:
     accuracy_decimals: 1
     update_interval: 60s
     device_class: moisture
+
+# Somente se for a bateria e se for ESP8266
+  - platform: adc
+    pin: VCC
+    name: Tensão da Bateria
+    update_interval: 60s
+    id: tensao_bateria
+    internal: False
+    disabled_by_default: False
+
+  - platform: template
+    name: Nível da Bateria
+    id: nivel_bateria
+    lambda: |-
+      // Considera que a tensão da bateria vai de 3.0V (0%) até 4.2V (100%)
+      float tensao = id(tensao_bateria).state * 3.3;
+      return (tensao - 3.0) * 100.0 / (4.2 - 3.0);
+    unit_of_measurement: "%"
+    update_interval: 60s
+    internal: False
+    disabled_by_default: False
+
+# Somente se for ESP8266 sem bateria
+#  - platform: adc
+#    pin: VCC
+#    name: Tensão da Bateria
+#    update_interval: 60s
+#    id: tensao_entrada
+#    internal: False
+#    disabled_by_default: False
 
 #  - platform: template
 #    id: percentual_var
