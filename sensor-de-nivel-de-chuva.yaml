@@ -109,17 +109,17 @@ sensor:
 
 text_sensor:
   - platform: template
-    name: Condição da Chuva
+    name: "Condição da Chuva"
     id: condicao_da_chuva
-    internal: False
-    disabled_by_default: False
+    internal: false
+    disabled_by_default: false
     lambda: |-
       if (id(intensidade_chuva).state == 0) {
-        return {"Sem Chuva"};
+        return "Sem Chuva";
       } else if (id(intensidade_chuva).state == 1) {
-        return {"Chuva Fraca"};
+        return "Chuva Fraca";
       } else if (id(intensidade_chuva).state == 2) {
-        return {"Chuva Moderada"};
+        return "Chuva Moderada";
       } else {
-        return {"Chuva Forte"};
+        return "Chuva Forte";
       }
