@@ -108,20 +108,33 @@ sensor:
           } else {
             return 3;  // Chuva forte
           }
+    on_value:
+      then:
+        - lambda: |-
+            if (id(intensidade_chuva).state == 0) {
+              id(condicao_da_chuva).publish_state("Sem Chuva");
+            } else if (id(intensidade_chuva).state == 1) {
+              id(condicao_da_chuva).publish_state("Chuva Fraca");
+            } else if (id(intensidade_chuva).state == 2) {
+              id(condicao_da_chuva).publish_state("Chuva Moderada");
+            } else {
+              id(condicao_da_chuva).publish_state("Chuva Forte");
+            }
 
 text_sensor:
   - platform: template
     name: "Condição da Chuva"
     id: condicao_da_chuva
-    internal: false
-    disabled_by_default: false
+    internal: False
+    disabled_by_default: False
+    update_interval: 60s
     lambda: |-
       if (id(intensidade_chuva).state == 0) {
-        return "Sem Chuva";
+        return {"Sem Chuva"};
       } else if (id(intensidade_chuva).state == 1) {
-        return "Chuva Fraca";
+        return {"Chuva Fraca"};
       } else if (id(intensidade_chuva).state == 2) {
-        return "Chuva Moderada";
+        return {"Chuva Moderada"};
       } else {
-        return "Chuva Forte";
+        return {"Chuva Forte"};
       }
