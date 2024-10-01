@@ -45,6 +45,18 @@ binary_sensor:
       - delayed_on: 10ms
       - delayed_off: 10ms
 
+  - platform: template
+    name: Chuva Forte
+    internal: False
+    disabled_by_default: False
+    lambda: |-
+      if (id(intensidade_chuva).state == 3) {
+        return true;  // Chuva forte detectada
+      } else {
+        return false;  // Chuva fraca ou nenhuma chuva
+      }
+    device_class: moisture
+
 sensor:
 # Somente se for a bateria e se for ESP8266
   - platform: adc
