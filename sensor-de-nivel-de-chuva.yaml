@@ -2,10 +2,17 @@ esphome:
   name: sensor-de-nivel-de-chuva
   friendly_name: Sensor de Nível de Chuva
 
-esp8266:
-  board: esp01_1m
-  restore_from_flash: True
-  early_pin_init: False
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
 
 packages:
   remote_package:
@@ -31,7 +38,7 @@ deep_sleep:
 binary_sensor:
   - platform: gpio
     pin:
-      number: GPIO0
+      number: GPIO4
       mode: INPUT_PULLUP
       inverted: True
     id: boia
