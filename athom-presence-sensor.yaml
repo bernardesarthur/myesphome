@@ -129,15 +129,6 @@ sensor:
     address: 0x23
     update_interval: 5s
 
-# Somente se for ESP8266 sem bateria
-  - platform: adc
-    pin: VCC
-    name: Tensão de Entrada
-    update_interval: 60s
-    id: tensao_entrada
-    internal: False
-    disabled_by_default: False
-
 switch:
   - platform: template
     name: "mmWave Status"

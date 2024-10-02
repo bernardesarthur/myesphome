@@ -19,16 +19,6 @@ packages:
 wifi:
   use_address: 192.168.212.223
 
-# Somente se for ESP8266 sem bateria
-sensor:
-  - platform: adc
-    pin: VCC
-    name: Tensão de Entrada
-    update_interval: 60s
-    id: tensao_entrada
-    internal: False
-    disabled_by_default: False
-
 switch:
   - platform: gpio
     pin:

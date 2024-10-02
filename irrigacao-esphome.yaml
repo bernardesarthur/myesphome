@@ -274,7 +274,6 @@ sensor:
           else return (x);
     accuracy_decimals: 0
 
-sensor:
   - platform: dht
     pin: D2
     temperature:
@@ -304,7 +303,6 @@ sensor:
     lambda: |-
       return id(temp_dht22).state - 1.5; # Aplica um offset de -1.5
 
-sensor:
   - platform: adc
     pin: A0
     name: "Soil Moisture"
