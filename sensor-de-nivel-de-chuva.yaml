@@ -84,7 +84,7 @@ sensor:
 # Somente se for ESP8266 sem bateria
 #  - platform: adc
 #    pin: VCC
-#    name: Tensão da Bateria
+#    name: Tensão de Entrada
 #    update_interval: 60s
 #    id: tensao_entrada
 #    internal: False
