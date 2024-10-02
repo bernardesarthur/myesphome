@@ -69,17 +69,24 @@ sensor:
     internal: False
     disabled_by_default: False
 
-  - platform: template
-    name: Nível da Bateria
-    id: nivel_bateria
-    lambda: |-
-      // Considera que a tensão da bateria vai de 3.0V (0%) até 4.2V (100%)
-      float tensao = id(tensao_bateria).state * 3.3;
-      return (tensao - 3.0) * 100.0 / (4.2 - 3.0);
-    unit_of_measurement: "%"
-    update_interval: 60s
-    internal: False
-    disabled_by_default: False
+- platform: template
+  name: Nível da Bateria
+  id: nivel_bateria
+  lambda: |-
+    // Considera que a tensão da bateria vai de 3.0V (0%) até 4.2V (100%)
+    float tensao = id(tensao_bateria).state * 3.3;
+    float percentual = (tensao - 3.0) * 100.0 / (4.2 - 3.0);
+    if (percentual > 100) {
+      return 100;
+    } else if (percentual < 0) {
+      return 0;
+    } else {
+      return percentual;
+    }
+  unit_of_measurement: "%"
+  update_interval: 60s
+  internal: False
+  disabled_by_default: False
 
 # Somente se for ESP8266 sem bateria
 #  - platform: adc

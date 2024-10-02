@@ -323,36 +323,3 @@ sensor:
     else if (x > 100) return 100;
     else return (x);
     accuracy_decimals: 0
-
-switch:
-  - platform: gpio
-    pin: 33
-    name: Solenoide da Bomba
-    id: solenoide_bomba
-    # internal: True
-    inverted: True
-    restore_mode: ALWAYS_OFF
-
-  - platform: gpio
-    pin: 25
-    name: Solenoide do Limoeiro
-    id: solenoide_limoeiro
-    # internal: True
-    inverted: True
-    restore_mode: ALWAYS_OFF
-
-  - platform: gpio
-    pin: 26
-    name: Solenoide da Lichia
-    id: solenoide_lichia
-    # internal: True
-    inverted: True
-    restore_mode: ALWAYS_OFF
-
-  - platform: gpio
-    pin: 27
-    name: Solenoide da Amoreira
-    id: solenoide_amoreira
-    # internal: True
-    inverted: True
-    restore_mode: ALWAYS_OFF
