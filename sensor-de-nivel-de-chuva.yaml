@@ -102,7 +102,7 @@ sensor:
 
 text_sensor:
   - platform: template
-    name: "Condição da Chuva"
+    name: Condição da Chuva
     id: condicao_da_chuva
     internal: False
     disabled_by_default: False
