@@ -32,7 +32,7 @@ wifi:
 
 # Deep Sleep para economizar bateria (somente se for a bateria)
 deep_sleep:
-  run_duration: 5s  # Tempo que o ESP8266 ficará ligado
+  run_duration: 5s  # Tempo que o ESP ficará ligado
   sleep_duration: 60s  # Tempo de sono antes de ligar novamente
 
 binary_sensor:

@@ -1,20 +1,45 @@
 sensor:
-# Somente se for a bateria e se for ESP8266
   - platform: adc
-    pin: VCC
+    pin: GPIO36  # Exemplo de pino ADC
     name: Tensão da Bateria
-    update_interval: 60s
     id: tensao_bateria
     internal: False
     disabled_by_default: False
-  - platform: template
-    name: Nível da Bateria
-    id: nivel_bateria
-    lambda: |-
-      // Considera que a tensão da bateria vai de 3.0V (0%) até 4.2V (100%)
-      float tensao = id(tensao_bateria).state * 3.3;
-      return (tensao - 3.0) * 100.0 / (4.2 - 3.0);
-    unit_of_measurement: "%"
     update_interval: 60s
+    attenuation: 11db  # Para tensões até 3.3V
+    filters:
+      - multiply: 2.7  # Ajuste para o divisor de tensão, conforme discutido anteriormente
+      - calibrate_linear:
+          # Mapeia as tensões da bateria para porcentagens
+          - 3.0 -> 0    # Tensão mínima (3.0V) corresponde a 0%
+          - 4.2 -> 100  # Tensão máxima (4.2V) corresponde a 100%
+      - lambda: |-
+          if (x < 0) return 0;
+          else if (x > 100) return 100;
+          else return x;
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: "mdi:battery"
+
+
+# Se for ESP8266, usar pino VCC
+sensor:
+  - platform: adc
+    pin: VCC  # Exemplo de pino ADC
+    name: Tensão da Bateria
+    id: tensao_bateria
     internal: False
     disabled_by_default: False
+    update_interval: 60s
+    filters:
+      - calibrate_linear:
+          # Mapeia as tensões da bateria para porcentagens
+          - 3.0 -> 0    # Tensão mínima (3.0V) corresponde a 0%
+          - 5.0 -> 100  # Tensão máxima (5.0V) corresponde a 100%
+      - lambda: |-
+          if (x < 0) return 0;
+          else if (x > 100) return 100;
+          else return x;
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: "mdi:battery"
