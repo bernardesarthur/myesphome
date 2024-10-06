@@ -1,3 +1,5 @@
+# Se for ESP8266, usar pino VCC
+
 sensor:
   - platform: adc
     pin: GPIO36  # Exemplo de pino ADC
@@ -21,11 +23,8 @@ sensor:
     accuracy_decimals: 0
     icon: "mdi:battery"
 
-
-# Se for ESP8266, usar pino VCC
-sensor:
   - platform: adc
-    pin: VCC  # Exemplo de pino ADC
+    pin: GPIO36  # Exemplo de pino ADC
     name: Tensão da Bateria
     id: tensao_bateria
     internal: False
