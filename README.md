@@ -1,1 +1,1 @@
-My First Project with ESPHOME
+My First Project with ESPHOME!
