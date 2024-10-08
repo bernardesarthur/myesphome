@@ -94,6 +94,27 @@ binary_sensor:
 
 # Se for pulsador remover o on_release
 
+button:
+  - platform: template
+    name: Click
+    id: click
+    internal: False
+    disabled_by_default: False
+    on_press:
+      - switch.turn_on: buttonpress
+      - delay: 1s
+      - switch.turn_off: buttonpress
+
+  - platform: template
+    name: Hold
+    id: hold
+    internal: False
+    disabled_by_default: False
+    on_press:
+      - switch.turn_on: buttonpress
+      - delay: 5s
+      - switch.turn_off: buttonpress
+
 switch:
   - platform: gpio
     pin:
@@ -105,48 +126,6 @@ switch:
     disabled_by_default: False
     # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
     restore_mode: ALWAYS_OFF
-
-  - platform: template
-    name: Click
-    id: click
-    internal: False
-    disabled_by_default: False
-    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
-    restore_mode: DISABLED
-    optimistic: False
-    lambda: |-
-      if (id(buttonpress).state) {
-        return true;
-      } else {
-        return false;
-      }
-    turn_on_action:
-      - switch.turn_on: buttonpress
-      - delay: 1s
-      - switch.turn_off: buttonpress
-    turn_off_action:
-      - switch.turn_off: buttonpress
-
-  - platform: template
-    name: Hold
-    id: hold
-    internal: False
-    disabled_by_default: False
-    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
-    restore_mode: DISABLED
-    optimistic: False
-    lambda: |-
-      if (id(buttonpress).state) {
-        return true;
-      } else {
-        return false;
-      }
-    turn_on_action:
-      - switch.turn_on: buttonpress
-      - delay: 5s
-      - switch.turn_off: buttonpress
-    turn_off_action:
-      - switch.turn_off: buttonpress
 
 status_led:
   pin: 
