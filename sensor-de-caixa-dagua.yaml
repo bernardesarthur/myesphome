@@ -119,9 +119,9 @@ sensor:
             float nivel_alarme_valor = id(nivel_alarme).state;
 
             // Lógica para o relay 1
-            if (percentual > liga_valor) {
+            if (percentual < liga_valor) {
               id(relay_1).turn_on();
-            } else if (percentual < desliga_valor) {
+            } else if (percentual > desliga_valor) {
               id(relay_1).turn_off();
             }
 
