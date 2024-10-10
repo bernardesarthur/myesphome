@@ -1,0 +1,103 @@
+esphome:
+  name: sensor-de-caixa-dagua
+  friendly_name: Sensor de Caixa Dagua
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+# Add after install on device
+wifi:
+  use_address: 192.168.212.223
+  # Desabilita a re-conexão contínua à rede para economizar energia (somente se for a bateria)
+  fast_connect: True
+  # NONE or LIGHT or HIGH
+  power_save_mode: HIGH
+
+# Deep Sleep para economizar bateria (somente se for a bateria)
+deep_sleep:
+  run_duration: 5s  # Tempo que o ESP ficará ligado
+  sleep_duration: 60s  # Tempo de sono antes de ligar novamente
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO1
+      mode: INPUT_PULLUP
+      inverted: True
+    name: Boia 1
+    id: b1
+    internal: True
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: moisture
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO2
+      mode: INPUT_PULLUP
+      inverted: True
+    name: Boia 2
+    id: b2
+    internal: True
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: moisture
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO3
+      mode: INPUT_PULLUP
+      inverted: True
+    name: Boia 3
+    id: b3
+    internal: True
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: moisture
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+sensor:
+  - platform: template
+    name: Percentual de Preenchimento da Caixa D'água
+    id: percentual_agua
+    internal: False
+    disabled_by_default: False
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(b1).state && id(b2).state && id(b3).state) {
+        return 100.0;  // Todas as boias ligadas, caixa cheia
+      } else if (id(b1).state && id(b2).state) {
+        return 66.0;  // Boias 1 e 2 ligadas, dois terços da caixa cheia
+      } else if (id(b1).state) {
+        return 33.0;  // Apenas boia 1 ligada, um terço da caixa cheia
+      } else {
+        return 0.0;   // Nenhuma boia ligada, caixa vazia
+      }
+    update_interval: 60s
+    device_class: moisture
