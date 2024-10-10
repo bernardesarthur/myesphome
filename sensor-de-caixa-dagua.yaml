@@ -52,6 +52,17 @@ binary_sensor:
       - delayed_on: 10ms
       - delayed_off: 10ms
 
+  - platform: template
+    name: Status do Alarme
+    id: status_alarme
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: problem
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
 sensor:
   - platform: ultrasonic
     trigger_pin: GPIO17
@@ -82,7 +93,7 @@ sensor:
     update_interval: 60s
 
   - platform: template
-    id: percentual_var
+    id: percentual_agua
     name: Percentual
     internal: False
     disabled_by_default: False
@@ -99,3 +110,114 @@ sensor:
     accuracy_decimals: 1
     update_interval: 60s
     device_class: moisture
+    on_value:
+      then:
+        - lambda: |-
+            float percentual = id(percentual_agua).state;
+            float liga_valor = id(liga_relay).state;
+            float desliga_valor = id(desliga_relay).state;
+            float nivel_alarme_valor = id(nivel_alarme).state;
+
+            // Lógica para o relay 1
+            if (percentual > liga_valor) {
+              id(relay_1).turn_on();
+            } else if (percentual < desliga_valor) {
+              id(relay_1).turn_off();
+            }
+
+            // Lógica para a sirene e status alarme
+            if (percentual < nivel_alarme_valor) {
+              if (id(beep_sonoro).state) {
+                id(relay_sirene).turn_on();
+              }
+              id(status_alarme).publish_state(true);
+            } else if (percentual > nivel_alarme_valor) {
+              id(relay_sirene).turn_off();
+              id(status_alarme).publish_state(false);
+            }
+
+#        - lambda: |-
+#            float percentual = id(percentual_agua).state;
+#            float nivel_alarme_valor = id(nivel_alarme).state;
+#
+#            // Loop liga/desliga da sirene enquanto percentual for menor que o nível de alarme
+#            if (percentual < nivel_alarme_valor) {
+#              while (percentual < nivel_alarme_valor) {
+#                id(relay_sirene).turn_on();
+#                delay(120000);  // Liga a sirene por 2 minutos (120000 ms)
+#                id(relay_sirene).turn_off();
+#                delay(120000);  // Desliga a sirene por 2 minutos (120000 ms)
+#              }
+#              id(status_alarme).publish_state(true);
+#            } else if (percentual > nivel_alarme_valor) {
+#              id(relay_sirene).turn_off();
+#              id(status_alarme).publish_state(false);
+#            }
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO4
+      inverted: False
+    name: Relay 1 
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: gpio
+    pin:
+      number: GPIO5
+      inverted: False
+    name: Relay Sirene
+    id: relay_sirene
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: Beep Sonoro
+    id: beep_sonoro
+    internal: False
+    disabled_by_default: False
+    optimistic: True
+    restore_mode: RESTORE_DEFAULT_ON
+
+number:
+  - platform: template
+    name: Liga relé em
+    id: liga_relay
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: True
+    optimistic: True
+    disabled_by_default: False
+    internal: False
+    mode: BOX
+
+  - platform: template
+    name: Desliga relé em
+    id: desliga_relay
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: True
+    optimistic: True
+    disabled_by_default: False
+    internal: False
+    mode: BOX
+
+  - platform: template
+    name: Nível Alarme
+    id: nivel_alarme
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: True
+    optimistic: True
+    disabled_by_default: False
+    internal: False
+    mode: BOX
