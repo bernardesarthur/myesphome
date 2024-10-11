@@ -1,0 +1,58 @@
+esphome:
+  name: tomada-do-tablet
+  friendly_name: Sonoff S26R2 - Tomada do Tablet
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: True
+  early_pin_init: False
+
+#Add after install on device
+wifi:
+  use_address: 192.168.212.116
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    id: button_1
+    name: Button 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press: 
+      then:
+      - switch.toggle: tomada_do_tablet
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO12
+      inverted: False
+    name: Tomada do Tablet 
+    id: tomada_do_tablet
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: tomada_do_tablet
+
+status_led:
+  pin: 
+    number: GPIO13
+    inverted: False
