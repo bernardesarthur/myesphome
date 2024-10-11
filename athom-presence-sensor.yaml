@@ -111,10 +111,10 @@ binary_sensor:
     publish_initial_state: True
     lambda: |-
       if ( id(mmwave).state and id(pir).state) {
-        return True;
+        return true;
       }
       else if (id(mmwave).state == 0) {
-        return False;
+        return false;
       }
       else {
         return id(occupancy).state;
