@@ -110,7 +110,7 @@ binary_sensor:
     disabled_by_default: False
     publish_initial_state: True
     lambda: |-
-      if ( id(mmwave).state and id(pir).state) {
+      if ( id(mmwave).state && id(pir).state) {
         return true;
       }
       else if (id(mmwave).state == 0) {
