@@ -11,6 +11,8 @@ preferences:
   flash_write_interval: 1min
 
 logger:
+  logs:
+    component: ERROR
 
 api:
 

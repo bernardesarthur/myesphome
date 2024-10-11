@@ -24,6 +24,10 @@ preferences:
 
 api:
 
+logger:
+  logs:
+    component: ERROR
+
 ota:
   - platform: esphome
 
