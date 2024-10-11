@@ -59,6 +59,25 @@ time:
 5 = Sexta-feira
 6 = Sábado
 
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Sao_Paulo
+#    timezone: "GMT+3"
+    update_interval: 60s
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 6
+        days_of_week: 
+          - 1  # Segunda-feira
+          - 3  # Quarta-feira
+          - 5  # Sexta-feira
+        then:
+          - switch.turn_off: tomada_do_nvr
+#          - delay: 1min
+#          - switch.turn_on: tomada_do_nvr
+
 interval:
   - interval: 1min
     then:
