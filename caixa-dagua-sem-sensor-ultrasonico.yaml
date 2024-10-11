@@ -138,24 +138,6 @@ sensor:
               id(status_alarme).publish_state(false);
             }
 
-#        - lambda: |-
-#            float percentual = id(percentual_agua).state;
-#            float nivel_alarme_valor = id(nivel_alarme).state;
-#
-#            // Loop liga/desliga da sirene enquanto percentual for menor que o nível de alarme
-#            if (percentual < nivel_alarme_valor) {
-#              while (percentual < nivel_alarme_valor) {
-#                id(relay_sirene).turn_on();
-#                delay(120000);  // Liga a sirene por 2 minutos (120000 ms)
-#                id(relay_sirene).turn_off();
-#                delay(120000);  // Desliga a sirene por 2 minutos (120000 ms)
-#              }
-#              id(status_alarme).publish_state(true);
-#            } else if (percentual > nivel_alarme_valor) {
-#              id(relay_sirene).turn_off();
-#              id(status_alarme).publish_state(false);
-#            }
-
 switch:
   - platform: gpio
     pin:
