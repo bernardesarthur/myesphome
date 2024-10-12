@@ -1,0 +1,96 @@
+esphome:
+  name: switch_complex
+  platform: ESP32
+  board: esp32dev
+
+# Sensor de umidade
+sensor:
+  - platform: dht
+    pin: GPIO17
+    temperature:
+      name: "Temperatura Externa"
+    humidity:
+      name: "Umidade Externa"
+      id: external_humidity
+    update_interval: 60s
+
+# Botão físico (usando GPIO como interruptor)
+binary_sensor:
+  - platform: gpio
+    pin: GPIO18
+    name: "Botão Físico"
+    id: button_switch
+    on_press:
+      - switch.toggle: relay_switch
+
+# Definindo o input_number para o delay de desligamento
+input_number:
+  delay_off_time:
+    name: "Tempo de Desligamento (segundos)"
+    initial: 600
+    min_value: 0
+    max_value: 3600
+    step: 1
+
+# Switch Template com múltiplas condições
+switch:
+  - platform: template
+    name: "Controle Complexo de Relé"
+    id: relay_switch
+    optimistic: true
+    lambda: |-
+      // Verifica se a umidade está acima de 70%
+      if (id(external_humidity).state > 70) {
+        return true;  // Liga automaticamente
+      }
+      return false;   // Mantém desligado por padrão
+    turn_on_action:
+      - if:
+          condition:
+            - lambda: 'return id(external_humidity).state <= 70;'  # Liga apenas se a umidade for inferior a 70%
+          then:
+            - logger.log: "Relé ligado porque a umidade está abaixo de 70%"
+            - switch.turn_on: relay_real
+            - script.execute: auto_turn_off   # Inicia o script de desligamento automático
+    turn_off_action:
+      - switch.turn_off: relay_real
+      - logger.log: "Relé desligado manualmente"
+
+  - platform: gpio
+    pin: GPIO19
+    id: relay_real
+    name: "Relé Real"
+    restore_mode: ALWAYS_OFF  # Garante que o relé começa desligado
+
+# Script para desligamento automático
+script:
+  - id: auto_turn_off
+    mode: restart
+    then:
+      - delay: !lambda |-
+          // Usa o valor do input_number para definir o delay
+          return id(delay_off_time).state * 1000;
+      - switch.turn_off: relay_switch
+      - logger.log: "Relé desligado automaticamente após o tempo definido"
+
+# Componente de tempo para verificar o horário do dia
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# Automatização com base no horário do dia
+interval:
+  - interval: 1min
+    then:
+      - if:
+          condition:
+            # Verifica se são entre 18:00 e 06:00 (hora local do Home Assistant)
+            - lambda: |-
+                auto time = id(homeassistant_time).now();
+                return (time.hour >= 18 || time.hour < 6);
+          then:
+            - logger.log: "Horário noturno detectado, ativando relé se necessário"
+            - switch.turn_on: relay_switch
+          else:
+            - logger.log: "Desativando relé porque está fora do horário noturno"
+            - switch.turn_off: relay_switch
