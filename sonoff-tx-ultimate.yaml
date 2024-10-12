@@ -17,8 +17,6 @@ esp32_ble_tracker:
 bluetooth_proxy:
   active: True
 
-#base_file_for_esphome_projects
-
 preferences:
   flash_write_interval: 1min
 
