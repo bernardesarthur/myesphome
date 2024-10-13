@@ -51,7 +51,6 @@ switch:
           then:
             - logger.log: "Relé ligado porque a umidade está abaixo de 70%"
             - switch.turn_on: relay_real
-            - script.execute: auto_turn_off   # Inicia o script de desligamento automático
     turn_off_action:
       - switch.turn_off: relay_real
       - logger.log: "Relé desligado manualmente"
@@ -61,17 +60,6 @@ switch:
     id: relay_real
     name: "Relé Real"
     restore_mode: ALWAYS_OFF  # Garante que o relé começa desligado
-
-# Script para desligamento automático
-script:
-  - id: auto_turn_off
-    mode: restart
-    then:
-      - delay: !lambda |-
-          // Usa o valor do input_number para definir o delay
-          return id(delay_off_time).state * 1000;
-      - switch.turn_off: relay_switch
-      - logger.log: "Relé desligado automaticamente após o tempo definido"
 
 # Componente de tempo para verificar o horário do dia
 time:
