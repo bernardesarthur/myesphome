@@ -70,6 +70,7 @@ sensor:
     internal: False
     disabled_by_default: False
     id: ultrassonico
+    name: Distância
     update_interval: 60s
     unit_of_measurement: "m"
     filters:
