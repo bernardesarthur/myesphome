@@ -23,6 +23,15 @@ binary_sensor:
     on_press:
       - switch.toggle: relay_switch
 
+# Definindo o input_number para o delay de desligamento
+input_number:
+  delay_off_time:
+    name: "Tempo de Desligamento (segundos)"
+    initial: 600
+    min_value: 0
+    max_value: 3600
+    step: 1
+
 # Switch Template com múltiplas condições
 switch:
   - platform: template
@@ -73,3 +82,13 @@ interval:
           else:
             - logger.log: "Desativando relé porque está fora do horário noturno"
             - switch.turn_off: relay_switch
+
+lambda: |-
+  if ((id(relay_1).state && id(relay_2).state) || 
+      (id(relay_3).state && id(relay_4).state) || 
+      (id(relay_5).state && id(relay_6).state) || 
+      (id(relay_7).state && id(relay_8).state)) {
+    return true;
+  } else {
+    return false;
+  }
