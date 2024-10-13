@@ -23,15 +23,6 @@ binary_sensor:
     on_press:
       - switch.toggle: relay_switch
 
-# Definindo o input_number para o delay de desligamento
-input_number:
-  delay_off_time:
-    name: "Tempo de Desligamento (segundos)"
-    initial: 600
-    min_value: 0
-    max_value: 3600
-    step: 1
-
 # Switch Template com múltiplas condições
 switch:
   - platform: template
