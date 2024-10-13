@@ -67,7 +67,7 @@ sensor:
   - platform: ultrasonic
     trigger_pin: GPIO17
     echo_pin: GPIO16
-    internal: True
+    internal: False
     disabled_by_default: False
     id: ultrassonico
     update_interval: 60s
