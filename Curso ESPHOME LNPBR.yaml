@@ -1,0 +1,357 @@
+# Aula 01
+
+switch:
+  - platform: gpio
+    id: rele1
+    pin: 14
+    name: "Rele1"
+    inverted: true
+  - platform: gpio
+    id: rele2
+    pin: 12
+    name: "Rele2"
+    inverted: true
+  - platform: gpio
+    id: rele3
+    pin: 13
+    name: "Rele3"
+    inverted: true
+  - platform: gpio
+    id: rele4
+    pin: 15
+    name: "Rele4"
+    inverted: true
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      inverted: True
+      number: 2
+    name: "Interruptor"
+    on_press:
+      then:
+        - switch.toggle: rele1
+    on_release:
+      then:
+        - switch.toggle: rele1
+
+# Aula 02
+
+switch:
+  - platform: gpio
+    id: rele1
+    pin: 14
+    name: "Rele1"
+    inverted: true
+    on_turn_on:
+    - delay: 1000ms
+    - switch.turn_off: rele1
+  - platform: gpio
+    id: rele2
+    pin: 12
+    name: "Rele2"
+    inverted: true
+    interlock: &interlock_group [rele2, rele3, rele4]
+  - platform: gpio
+    id: rele3
+    pin: 13
+    name: "Rele3"
+    inverted: true
+    interlock: *interlock_group
+  - platform: gpio
+    id: rele4
+    pin: 15
+    name: "Rele4"
+    inverted: true
+    interlock: *interlock_group
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      inverted: True
+      number: 2
+    name: "Interruptor"
+    on_press:
+      then:
+        - switch.toggle: rele1
+    on_release:
+      then:
+        - switch.toggle: rele1
+
+# Aula 03
+
+mqtt:
+  broker: 192.168.2.65
+  username: lnpbr
+  password: lnpbr
+  on_message:
+     - topic: 8266teste/reles/set
+       payload: "on"
+       then:
+         - switch.turn_on: rele1
+         - switch.turn_on: rele2
+         - switch.turn_on: rele3
+         - switch.turn_on: rele4
+     - topic: 8266teste/reles/set
+       payload: "off"
+       then:
+         - switch.turn_off: rele1
+         - switch.turn_off: rele2
+         - switch.turn_off: rele3
+         - switch.turn_off: rele4
+
+switch:
+  - platform: gpio
+    id: rele1
+    pin: 14
+    name: "Rele1"
+    inverted: true
+  - platform: gpio
+    id: rele2
+    pin: 12
+    name: "Rele2"
+    inverted: true
+  - platform: gpio
+    id: rele3
+    pin: 13
+    name: "Rele3"
+    inverted: true
+  - platform: gpio
+    id: rele4
+    pin: 15
+    name: "Rele4"
+    inverted: true
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      inverted: True
+      number: 2
+    name: "Interruptor"
+    on_press:
+      then:
+        - switch.toggle: rele1
+    on_release:
+      then:
+        - switch.toggle: rele1
+# Aula 04
+
+mqtt:
+  broker: 192.168.2.65
+  username: lnpbr
+  password: lnpbr
+  on_message:
+     - topic: 8266teste/reles/set
+       payload: "on"
+       then:
+         - switch.turn_on: rele1
+         - switch.turn_on: rele2
+         - switch.turn_on: rele3
+         - switch.turn_on: rele4
+     - topic: 8266teste/reles/set
+       payload: "off"
+       then:
+         - switch.turn_off: rele1
+         - switch.turn_off: rele2
+         - switch.turn_off: rele3
+         - switch.turn_off: rele4
+
+switch:
+  - platform: gpio
+    id: rele1
+    pin: 14
+    name: "Rele1"
+    inverted: true
+  - platform: gpio
+    id: rele2
+    pin: 12
+    name: "Rele2"
+    inverted: true
+  - platform: gpio
+    id: rele3
+    pin: 13
+    name: "Rele3"
+    inverted: true
+  - platform: gpio
+    id: rele4
+    pin: 15
+    name: "Rele4"
+    inverted: true
+
+  - platform: template
+    name: Geral
+    lambda: |-
+      if ( (id(rele1).state == 1) && (id(rele2).state == 1) && (id(rele3).state == 1) && (id(rele4).state == 1) ) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action:
+      - switch.turn_on: rele1
+      - switch.turn_on: rele2
+      - switch.turn_on: rele3
+      - switch.turn_on: rele4
+    turn_off_action:
+      - switch.turn_off: rele1
+      - switch.turn_off: rele2
+      - switch.turn_off: rele3
+      - switch.turn_off: rele4
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      inverted: True
+      number: 2
+    name: "Interruptor"
+    on_press:
+      then:
+        - switch.toggle: rele1
+    on_release:
+      then:
+        - switch.toggle: rele1
+
+# Aula 05
+
+esphome:
+  name: 8266-testes-01
+  friendly_name: 8266_Testes_01
+
+esp8266:
+  board: esp01_1m
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "RWJi2XNKf76gG7Auc4DQRRGYwUS88cWYbgC4roIUEF8="
+
+ota:
+  password: "32472072e92255b74c45f50b8871525d"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: admin
+
+mqtt:
+  broker: 192.168.2.65
+  username: lnpbr
+  password: lnpbr
+
+dallas:
+  - pin: 4
+    update_interval: 2s
+
+sensor:
+  - platform: dallas
+    address: <sensor_address>
+    name: "Sensor DS18B20"
+
+# Aula 06
+
+esphome:
+  name: esp8366teste
+  friendly_name: esp8366teste
+
+esp8266:
+  board: esp01_1m
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "mNNMZS81YoRLM+UmuQ/HnDhKTSmMEJlP4Bpu6eIrOCE="
+
+ota:
+  password: "bad8892e4fc622d063b5f9ae5a190c24"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+mqtt:
+  broker: 192.168.2.65
+  username: lnpbr
+  password: lnpbr
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: admin
+
+servo:
+  - id: servo1
+    output: pwm_output1
+
+output:
+  - platform: esp8266_pwm
+    id: pwm_output1
+    pin: 5
+    frequency: 50 Hz
+
+number:
+  - platform: template
+    name: Controle Servo1
+    min_value: -100
+    initial_value: 0
+    max_value: 100
+    step: 1
+    optimistic: true
+    set_action:
+      then:
+        - servo.write:
+            id: servo1
+            level: !lambda 'return x / 100.0;'
+
+# Aula 07
+
+esphome:
+  name: esp8366teste
+  friendly_name: esp8366teste
+
+esp8266:
+  board: esp01_1m
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "mNNMZS81YoRLM+UmuQ/HnDhKTSmMEJlP4Bpu6eIrOCE="
+
+ota:
+  password: "bad8892e4fc622d063b5f9ae5a190c24"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+mqtt:
+  broker: 192.168.2.65
+  username: lnpbr
+  password: lnpbr
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: admin
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: 4
+    echo_pin: 0
+    name: "Ultrasonic Sensor"
+    update_interval: 2s
+    timeout: 3.5m
