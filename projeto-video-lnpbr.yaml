@@ -1,0 +1,93 @@
+binary_sensor:
+  - platform: gpio
+    pin: 25
+    name: "Presença Abrigo"
+    device_class: motion
+  - platform: gpio
+    pin:
+      number: 26
+      inverted: true
+    name: "Porta Abrigo"
+    device_class: door
+
+sensor:
+  - platform: ultrasonic
+    name: "Distância Medida"
+    trigger_pin: 32
+    echo_pin: 33
+    internal: false
+    update_interval: 10s
+    id: ultrassonico
+    timeout: 2m
+    unit_of_measurement: "cm"
+    filters:
+      - multiply: 100
+
+  - platform: template
+    name: BateriaPercentualBruto
+    id: bateriapercentualbruto
+    update_interval: 10s
+    internal: True
+    lambda: 'return id(tensaobateria).state;'
+    filters:
+      - calibrate_linear:
+        - 3.60 -> 1
+        - 4.15 -> 100
+
+  - platform: template
+    name: Bateria
+    device_class: battery
+    update_interval: 10s
+    unit_of_measurement: "%"
+    lambda: |-
+      if ((id(bateriapercentualbruto).state) > 100) {
+        return 100;
+      } else if ((id(bateriapercentualbruto).state) < 1) {
+        return 1;
+      } else {
+        return (id(bateriapercentualbruto).state);
+      }
+
+  - platform: adc
+    pin: 35
+    name: "Sensor de Chuva Medição ADC"
+    attenuation: 12db
+    update_interval: 30s
+    id: volumechuva
+    unit_of_measurement: "V"
+    device_class: voltage
+    internal: False
+
+  - platform: adc
+    pin: 34
+    name: "Tensão da Bateria"
+    attenuation: auto
+    update_interval: 10s
+    id: tensaobateria
+    unit_of_measurement: "V"
+    device_class: voltage
+    internal: False
+    filters:
+      - multiply: 1.51
+
+text_sensor:
+  - platform: template
+    name: "Volume de Chuva"
+    icon: mdi:weather-rainy
+    update_interval: 30s
+    lambda: |-
+      if (id(volumechuva).state < 1.8) {
+        return {"Chuva Forte"};
+      } 
+      else if ((id(volumechuva).state < 2.4) and (id(volumechuva).state >= 1.8)) {
+        return {"Chuva Moderada"};
+      }
+      else if ((id(volumechuva).state < 3.0) and (id(volumechuva).state >= 2.4)) {
+        return {"Chuva Fraca"};
+      }
+      else if (id(volumechuva).state >= 3.0) {
+        return {"Sem Chuva"};
+      }
+      else {
+        return {"Leitura Inválida"};
+      }
