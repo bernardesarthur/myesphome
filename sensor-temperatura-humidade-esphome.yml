@@ -72,12 +72,12 @@ sensor:
       disabled_by_default: False
       filters:
         - lambda: |-
-            return x * (1 + id(temp_calibration).state / 100.0)
+            return x * (1.0 + id(temp_calibration).state / 100.0)
     humidity:
       name: Umidade
       internal: False
       disabled_by_default: False
       filters:
         - lambda: |-
-            return x * (1 + id(humidity_calibration).state / 100.0);
+            return x * (1.0 + id(humidity_calibration).state / 100.0);
     update_interval: 60s

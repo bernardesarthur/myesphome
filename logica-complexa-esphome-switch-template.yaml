@@ -31,14 +31,14 @@ switch:
     optimistic: true
     lambda: |-
       // Verifica se a umidade está acima de 70%
-      if (id(external_humidity).state > 70) {
+      if (id(external_humidity).state > 70.0) {
         return true;  // Liga automaticamente
       }
       return false;   // Mantém desligado por padrão
     turn_on_action:
       - if:
           condition:
-            - lambda: 'return id(external_humidity).state <= 70;'  # Liga apenas se a umidade for inferior a 70%
+            - lambda: 'return id(external_humidity).state <= 70.0;'  # Liga apenas se a umidade for inferior a 70%
           then:
             - logger.log: "Relé ligado porque a umidade está abaixo de 70%"
             - switch.turn_on: relay_real
