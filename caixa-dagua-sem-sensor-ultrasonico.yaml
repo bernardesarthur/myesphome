@@ -173,9 +173,9 @@ number:
   - platform: template
     name: Liga relé em
     id: liga_relay
-    min_value: 0
-    max_value: 100
-    step: 1
+    min_value: 0.0
+    max_value: 100.0
+    step: 1.0
     restore_value: True
     optimistic: True
     disabled_by_default: False
@@ -185,9 +185,9 @@ number:
   - platform: template
     name: Desliga relé em
     id: desliga_relay
-    min_value: 0
-    max_value: 100
-    step: 1
+    min_value: 0.0
+    max_value: 100.0
+    step: 1.0
     restore_value: True
     optimistic: True
     disabled_by_default: False
@@ -197,9 +197,9 @@ number:
   - platform: template
     name: Nível Alarme
     id: nivel_alarme
-    min_value: 0
-    max_value: 100
-    step: 1
+    min_value: 0.0
+    max_value: 100.0
+    step: 1.0
     restore_value: True
     optimistic: True
     disabled_by_default: False
