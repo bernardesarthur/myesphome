@@ -1,0 +1,121 @@
+esphome:
+  name: sensor-de-nivel-de-chuva
+  friendly_name: Sensor de Nível de Chuva
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+# Add after install on device
+wifi:
+  use_address: 192.168.212.223
+  # Desabilita a re-conexão contínua à rede para economizar energia (somente se for a bateria)
+  fast_connect: True
+  # NONE or LIGHT or HIGH
+  power_save_mode: HIGH
+
+# Deep Sleep para economizar bateria (somente se for a bateria)
+deep_sleep:
+  run_duration: 5s  # Tempo que o ESP ficará ligado
+  sleep_duration: 60s  # Tempo de sono antes de ligar novamente
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+      inverted: True
+    id: boia
+    name: boia
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: problem
+    entity_category: diagnostic
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: template
+    name: Chuva Forte
+    id: chuva_forte
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    lambda: |-
+      if (id(intensidade_chuva).state == 3) {
+        return true;  // Chuva forte detectada
+      } else {
+        return false;  // Chuva fraca ou nenhuma chuva
+      }
+    device_class: moisture
+
+sensor:
+  - platform: adc
+    pin: A0  # Defina o pino correto para o sensor
+    name: Intensidade da Chuva
+    id: intensidade_chuva
+    internal: False
+    disabled_by_default: False
+    update_interval: 60s  # Atualiza a cada minuto
+    filters:
+      - lambda: |-
+          if (x < 0.1) {
+            return 0;  // Sem chuva
+          } else if (x < 0.5) {
+            return 1;  // Chuva fraca
+          } else if (x < 0.8) {
+            return 2;  // Chuva moderada
+          } else {
+            return 3;  // Chuva forte
+          }
+    on_value:
+      then:
+        - lambda: |-
+            if (id(intensidade_chuva).state == 0) {
+              id(condicao_da_chuva).publish_state("Sem Chuva");
+            } else if (id(intensidade_chuva).state == 1) {
+              id(condicao_da_chuva).publish_state("Chuva Fraca");
+            } else if (id(intensidade_chuva).state == 2) {
+              id(condicao_da_chuva).publish_state("Chuva Moderada");
+            } else if (id(intensidade_chuva).state == 3) {
+              id(condicao_da_chuva).publish_state("Chuva Forte");
+            } else {
+              id(condicao_da_chuva).publish_state("Erro");
+            }
+
+text_sensor:
+  - platform: template
+    name: Condição da Chuva
+    id: condicao_da_chuva
+    internal: False
+    disabled_by_default: False
+    update_interval: 60s
+    lambda: |-
+      if (id(intensidade_chuva).state == 0) {
+        return {"Sem Chuva"};
+      } else if (id(intensidade_chuva).state == 1) {
+        return {"Chuva Fraca"};
+      } else if (id(intensidade_chuva).state == 2) {
+        return {"Chuva Moderada"};
+      } else if (id(intensidade_chuva).state == 3) {
+        return {"Chuva Forte"};
+      } else {
+        return {"Erro"};
+      }

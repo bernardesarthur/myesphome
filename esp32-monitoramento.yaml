@@ -1,0 +1,184 @@
+esphome:
+  name: esp32-monitoramento
+  friendly_name: ESP32 Monitoramento
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+# Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO3
+      mode: INPUT_PULLUP
+      inverted: True
+    id: boia
+    name: boia
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: problem
+    entity_category: diagnostic
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO25
+      mode: INPUT_PULLUP
+      inverted: False
+    id: presenca_abrigo
+    name: Presença Abrigo
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: motion
+    entity_category: diagnostic
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: 26
+      mode: INPUT_PULLUP
+      inverted: True
+    id: porta_abrigo
+    name: Porta Abrigo
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    device_class: door
+    entity_category: diagnostic
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: GPIO17
+    echo_pin: GPIO16
+    internal: False
+    disabled_by_default: False
+    id: ultrassonico
+    name: Distância
+    update_interval: 60s
+    unit_of_measurement: "m"
+    filters:
+      - median:
+          window_size: 5
+          send_every: 1
+          send_first_at: 1
+#      - multiply: 100 # Ativar se for usar unit_of_measurement: "cm"
+    # Configurações opcionais do sensor de ultrassom
+#    pulse_time: 20us
+#    timeout: 1.0m
+
+  - platform: template
+    id: nivel
+    name: Nível
+    internal: False
+    disabled_by_default: False
+    lambda: return (0.94-id(ultrassonico).state);
+    unit_of_measurement: "m"
+    device_class: distance
+    accuracy_decimals: 2
+    update_interval: 60s
+
+  - platform: template
+    id: percentual_agua
+    name: Percentual
+    internal: False
+    disabled_by_default: False
+    unit_of_measurement: "%"
+    lambda: |-
+      float valor = (id(nivel).state / 0.65) * 100;
+      if (valor > 100) {
+        return 100;
+      } else if (valor < 0) {
+        return 0;
+      } else {
+        return valor;
+      }
+    accuracy_decimals: 1
+    update_interval: 60s
+    device_class: moisture
+
+  - platform: adc
+    pin: GPIO36  # Exemplo de pino ADC
+    name: "Tensão da Bateria"
+    id: tensao_bateria
+    internal: False
+    disabled_by_default: False
+    update_interval: 60s
+    attenuation: 11db  # Para tensões até 3.3V
+    filters:
+      - multiply: 2.7  # Ajuste para o divisor de tensão, dependendo do divisor físico utilizado
+      - calibrate_linear:
+          # Mapeia as tensões da bateria para porcentagens (ajuste conforme necessário)
+          - 3.0 -> 0    # Tensão mínima, pode ser ajustada conforme a faixa da bateria
+          - 4.15 -> 100  # Tensão máxima, ajuste conforme necessário
+      - lambda: |-
+          if (x < 0) return 0;  // Se o valor for menor que 0, limita a 0%
+          else if (x > 100) return 100;  // Se o valor for maior que 100%, limita a 100%
+          else return x;  // Caso contrário, retorna o valor dentro do intervalo
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: "mdi:battery"
+
+  - platform: adc
+    pin: 35
+    name: Sensor de Chuva
+    id: sensorchuva
+    attenuation: 12db
+    update_interval: 30s
+    unit_of_measurement: "V"
+    device_class: voltage
+    internal: True
+    disabled_by_default: False
+
+text_sensor:
+  - platform: template
+    name: Volume de Chuva
+    id: volumechuva
+    icon: mdi:weather-rainy
+    update_interval: 30s
+    internal: False
+    disabled_by_default: False
+    lambda: |-
+      if (id(sensorchuva).state < 1.8) {
+        return {"Chuva Forte"};
+      }
+      else if ((id(sensorchuva).state < 2.4) and (id(sensorchuva).state >= 1.8)) {
+        return {"Chuva Moderada"};
+      }
+      else if ((id(sensorchuva).state < 3.0) and (id(sensorchuva).state >= 2.4)) {
+        return {"Chuva Fraca"};
+      }
+      else if (id(sensorchuva).state >= 3.0) {
+        return {"Sem Chuva"};
+      }
+      else {
+        return {"Leitura Inválida"};
+      }
