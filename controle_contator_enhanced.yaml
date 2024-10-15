@@ -1,0 +1,265 @@
+esphome:
+  name: athom-relay-x4
+  friendly_name: Athom Relay X4
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32dev
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+    version: recommended
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+#Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO36
+      mode: INPUT
+      inverted: True
+    id: contatora_1
+    name: Contatora 1
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO39
+      mode: INPUT
+      inverted: True
+    id: contatora_2
+    name: Contatora 2
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO34
+      mode: INPUT
+      inverted: True
+    id: contatora_3
+    name: Contatora 3
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO35
+      mode: INPUT
+      inverted: True
+    id: contatora_4
+    name: Contatora 4
+    internal: False
+    disabled_by_default: False
+    publish_initial_state: True
+    filters: 
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO27
+      inverted: False
+    id: relay_1_real
+    internal: True
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: &interlock_group_1 [relay_1_real, relay_2_real, relay_3_real, relay_4_real]
+    interlock_wait_time: 0ms
+
+  - platform: gpio
+    pin:
+      number: GPIO14
+      inverted: False
+    id: relay_2_real
+    internal: True
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: *interlock_group_1
+    interlock_wait_time: 0ms
+
+  - platform: gpio
+    pin:
+      number: GPIO12
+      inverted: False
+    id: relay_3_real
+    internal: True
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: *interlock_group_1
+    interlock_wait_time: 0ms
+
+  - platform: gpio
+    pin:
+      number: GPIO13
+      inverted: False
+    id: relay_4_real
+    internal: True
+    disabled_by_default: False
+    restore_mode: RESTORE_DEFAULT_OFF
+    interlock: *interlock_group_1
+    interlock_wait_time: 0ms
+
+  - platform: template
+    name: Relay 1 
+    id: relay_1
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(contatora_1).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      - if:
+          condition:
+            # Checa se o contator_1 está desligado
+            not:
+              binary_sensor.is_on: contatora_1
+          then:
+            - switch.turn_on: relay_1_real
+    turn_off_action: 
+      then:
+        - switch.turn_off: relay_1_real
+
+  - platform: template
+    name: Relay 2
+    id: relay_2
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(contatora_2).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      - if:
+          condition:
+            # Checa se o contator_1 está desligado
+            not:
+              binary_sensor.is_on: contatora_1
+          then:
+            - switch.turn_on: relay_2_real
+    turn_off_action: 
+      then:
+        - switch.turn_off: relay_2_real
+
+  - platform: template
+    name: Relay 3
+    id: relay_3
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(contatora_3).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      - if:
+          condition:
+            # Checa se o contator_1 está desligado
+            not:
+              binary_sensor.is_on: contatora_1
+          then:
+            - switch.turn_on: relay_3_real
+    turn_off_action: 
+      then:
+        - switch.turn_off: relay_3_real
+
+  - platform: template
+    name: Relay 4
+    id: relay_4
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(contatora_4).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      - if:
+          condition:
+            # Checa se o contator_1 está desligado
+            not:
+              binary_sensor.is_on: contatora_1
+          then:
+            - switch.turn_on: relay_4_real
+    turn_off_action: 
+      then:
+        - switch.turn_off: relay_4_real
+
+  - platform: template
+    name: Todos
+    id: todos
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(relay_1).state || id(relay_2).state || id(relay_3).state || id(relay_4).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      then:
+        - switch.turn_on: relay_1
+        - switch.turn_on: relay_2
+        - switch.turn_on: relay_3
+        - switch.turn_on: relay_4
+    turn_off_action:
+      then:
+        - switch.turn_off: relay_1
+        - switch.turn_off: relay_2
+        - switch.turn_off: relay_3
+        - switch.turn_off: relay_4
+
+status_led:
+  pin: 
+    number: GPIO15
+    inverted: False
