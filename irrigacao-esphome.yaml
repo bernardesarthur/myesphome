@@ -322,7 +322,7 @@ sensor:
     lambda: |-
       return id(temp_dht22).state + 1.5; // Aplica um offset de +1.5
 
-      # ou
+      // ou
 
   - platform: template
     name: "Temperatura Corrigida 2"
