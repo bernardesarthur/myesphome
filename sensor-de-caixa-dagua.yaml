@@ -176,6 +176,9 @@ number:
     disabled_by_default: False
     internal: False
     mode: BOX
+    on_value: 
+      then:
+        - component.update: percentual_agua
 
   - platform: template
     name: Desliga relé em
@@ -188,6 +191,9 @@ number:
     disabled_by_default: False
     internal: False
     mode: BOX
+    on_value: 
+      then:
+        - component.update: percentual_agua
 
   - platform: template
     name: Nível Alarme
@@ -200,3 +206,6 @@ number:
     disabled_by_default: False
     internal: False
     mode: BOX
+    on_value: 
+      then:
+        - component.update: percentual_agua
