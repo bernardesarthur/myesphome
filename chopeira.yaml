@@ -1,0 +1,104 @@
+# Configuração do display SSD1306
+i2c:
+  sda: GPIO21
+  scl: GPIO19
+  scan: true
+
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          id(show_header) = !id(show_header);
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    rotation: 0
+    id: my_display
+    lambda: |-
+      if (id(rele_canal_1).state) {  // Checar se o Rele Canal 1 está ligado
+        if (id(temp_sensor).state < 9.99) {
+          if (id(rele_canal_2).state) {  // Verificar se o Rele Canal 2 está ligado
+            if (id(show_header)) {
+              it.printf(64, 9, id(header_font_bold), TextAlign::CENTER, "Heineken");
+            } else {
+              it.printf(64, 9, id(header_font_bold), TextAlign::CENTER, "        "); // Espaço em branco para piscar
+            }
+          } else {
+            it.printf(64, 9, id(header_font_bold), TextAlign::CENTER, "Heineken");
+          }
+          it.printf(64, 32, id(temp_font_bold), TextAlign::CENTER, "%.2f°C", id(temp_sensor).state);  // Reposicionando a temperatura
+          it.printf(64, 58, id(header_font_bold), TextAlign::CENTER, "%.2f L", id(valor_hx711).state);  // Exibindo a quantidade de litros com duas casas decimais
+        } else {
+          it.printf(64, 9, id(header_font_bold), TextAlign::CENTER, "Heineken");
+          it.printf(64, 32, id(temp_font_bold), TextAlign::CENTER, "%.2f°C", id(temp_sensor).state);  // Reposicionando a temperatura
+          it.printf(64, 58, id(header_font_bold), TextAlign::CENTER, "%.2f L", id(valor_hx711).state);  // Exibindo a quantidade de litros com duas casas decimais
+        }
+      } else {
+        it.strftime(64, 32, id(temp_font_bold), TextAlign::CENTER, "%H:%M:%S", id(esptime).now());  // Exibir relógio no centro da tela
+      }
+
+globals:
+  - id: show_header
+    type: bool
+    restore_value: no
+    initial_value: 'true'
+
+font:
+  - file: "fonts/arial_bold.ttf"
+    id: header_font_bold
+    size: 23
+  - file: "fonts/arial_bold.ttf"
+    id: temp_font_bold
+    size: 30
+
+one_wire:
+   - platform: gpio
+     pin: GPIO25
+
+sensor:
+  - platform: dallas_temp
+    address: 0xfc00000086bbef28
+    name: "Temp Sensor"
+    id: temp_sensor
+    update_interval: 10s
+    accuracy_decimals: 2
+
+  - platform: hx711
+    name: "Valor HX711"
+    dout_pin: GPIO13
+    clk_pin: GPIO12
+    gain: 64
+    update_interval: 10s
+    accuracy_decimals: 1
+    filters:
+      - calibrate_linear:
+          - -11000 -> 0
+          - 180000 -> 5.000
+    unit_of_measurement: litros
+    id: valor_hx711
+
+# Configuração dos Relés CW-021
+switch:
+  - platform: gpio
+    name: "Rele Canal 1"
+    pin: GPIO15
+    id: rele_canal_1
+    inverted: true
+    restore_mode: ALWAYS_ON
+
+  - platform: gpio
+    name: "Rele Canal 2"
+    pin: GPIO16
+    id: rele_canal_2
+    inverted: true
+    restore_mode: ALWAYS_OFF
+
+time:
+  - platform: sntp
+    id: esptime
+    servers:
+      - 0.br.pool.ntp.org
+      - 1.br.pool.ntp.org
+      - 2.br.pool.ntp.org
