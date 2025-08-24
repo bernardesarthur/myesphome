@@ -5,7 +5,7 @@ esphome:
 esp32:
   board: esp32dev
   framework:
-    type: arduino
+    type: esp-idf
 
 esp32_ble_tracker:
   scan_parameters:
@@ -39,13 +39,13 @@ binary_sensor:
   - platform: gpio
     pin:
       number: GPIO3
-      mode: INPUT_PULLUP
+#      mode: INPUT_PULLUP
       inverted: True
     id: boia
     name: boia
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: problem
     entity_category: diagnostic
     filters: 
@@ -57,7 +57,7 @@ binary_sensor:
     id: status_alarme
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: problem
     filters:
       - delayed_on: 10ms
@@ -115,20 +115,20 @@ sensor:
             float desliga_valor = id(desliga_relay).state;
             float nivel_alarme_valor = id(nivel_alarme).state;
 
-            // Lógica para o relay 1
+            // Lógica do relay 1 com histerese para evitar desgaste da bomba
             if (percentual < liga_valor) {
               id(relay_1).turn_on();
             } else if (percentual >= desliga_valor) {
               id(relay_1).turn_off();
             }
 
-            // Lógica para a sirene e status alarme
-            if (percentual < nivel_alarme_valor) {
+            // Lógica da sirene e alarme, corrigida para acionar no ponto exato
+            if (percentual <= nivel_alarme_valor) {
               if (id(beep_sonoro).state) {
                 id(relay_sirene).turn_on();
               }
               id(status_alarme).publish_state(true);
-            } else if (percentual > nivel_alarme_valor) {
+            } else {
               id(relay_sirene).turn_off();
               id(status_alarme).publish_state(false);
             }

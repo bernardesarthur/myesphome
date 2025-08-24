@@ -1,0 +1,149 @@
+esphome:
+  name: sonoff-mini
+  friendly_name: Sonoff Mini
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: True
+  early_pin_init: False
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+#Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
+globals:
+  - id: direction_previous
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
+# ... (Seções esphome, esp8266, packages, wifi, globals) ...
+
+# Relés internos
+switch:
+  - platform: gpio
+    id: velocidade_baixa
+    pin:
+      number: GPIO16
+      inverted: False
+    internal: True
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: velocidade_media
+    pin:
+      number: GPIO14
+      inverted: False
+    internal: True
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: velocidade_alta
+    pin:
+      number: GPIO12
+      inverted: False
+    internal: True
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: exaustor
+    pin:
+      number: GPIO13
+      inverted: False
+    internal: True
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: led_indicador
+    pin:
+      number: GPIO5
+      inverted: False
+    internal: True
+
+select:
+  - platform: template
+    name: Modo do LED
+    id: led_mode
+    optimistic: True
+    restore_value: True
+    internal: False
+    disabled_by_default: False
+    options:
+      - "Auto"
+      - "Sempre Ligado"
+      - "Sempre Desligado"
+      - "Invertido"
+    initial_option: "Auto"
+    on_value:
+      then:
+        - fan.control:
+            id: ventilador_teto
+            speed: 'id(ventilador_teto).speed' # Força a atualização do LED quando o modo muda
+
+# Controle do ventilador como entidade única
+fan:
+  - platform: speed
+    name: Ventilador de Teto
+    id: ventilador_teto
+    output: ventilador_speed
+    direction_output: ventilador_direcao
+    speed_count: 3
+    on_state:
+      then:
+        - lambda: |-
+            // Lógica do LED unificada, reagindo a cada mudança de estado do ventilador
+            if (id(led_mode).state == "Sempre Ligado") {
+              id(led_indicador).turn_on();
+            } else if (id(led_mode).state == "Sempre Desligado") {
+              id(led_indicador).turn_off();
+            } else if (id(led_mode).state == "Auto") {
+              if (id(ventilador_teto).state) {
+                id(led_indicador).turn_on();
+              } else {
+                id(led_indicador).turn_off();
+              }
+            } else if (id(led_mode).state == "Invertido") {
+              if (id(ventilador_teto).state) {
+                id(led_indicador).turn_off();
+              } else {
+                id(led_indicador).turn_on();
+              }
+            }
+
+output:
+  - platform: template
+    id: ventilador_speed
+    type: float
+    write_action:
+      - lambda: |-
+          // Lógica de velocidade simplificada
+          id(velocidade_baixa).turn_off();
+          id(velocidade_media).turn_off();
+          id(velocidade_alta).turn_off();
+
+          if (state > 0 && state <= 0.34) {
+            id(velocidade_baixa).turn_on();
+          } else if (state > 0.34 && state <= 0.67) {
+            id(velocidade_media).turn_on();
+          } else if (state > 0.67) {
+            id(velocidade_alta).turn_on();
+          }
+
+  - platform: template
+    id: ventilador_direcao
+    type: binary
+    write_action:
+      - lambda: |-
+          if (state) {
+            id(exaustor).turn_on();
+          } else {
+            id(exaustor).turn_off();
+          }

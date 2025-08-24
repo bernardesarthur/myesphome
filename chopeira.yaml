@@ -43,7 +43,7 @@ globals:
   - id: show_header
     type: bool
     restore_value: no
-    initial_value: 'true'
+    initial_value: "true"
 
 font:
   - file: "fonts/arial_bold.ttf"
