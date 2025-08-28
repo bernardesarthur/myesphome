@@ -1,0 +1,45 @@
+esphome:
+  name: esp32-monitoramento-agua
+  friendly_name: ESP32 Monitoramento de Água
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+# Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
+sensor:
+
+  - platform: pulse_counter
+    pin: D5
+    unit_of_measurement: 'L/min'
+    accuracy_decimals: 1
+    update_interval: 60s
+    name: 'Water Meter House'
+    filters:
+    - lambda: return (x / 27.0);  
+    
+    total:
+      unit_of_measurement: 'L'
+      name: 'Water Meter Total'
+      accuracy_decimals: 1
+      filters:
+      - lambda: return (x / 27.0);
