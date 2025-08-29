@@ -65,7 +65,7 @@ binary_sensor:
     device_class: motion
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     filters: 
       - delayed_on: 50ms
       - delayed_off: 10s
@@ -82,7 +82,7 @@ binary_sensor:
     name: Button 1
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     filters: 
       - delayed_on_off: 10ms
 
@@ -94,7 +94,7 @@ binary_sensor:
     id: mmwave
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     filters:
       - delayed_on: 50ms
     device_class: motion
@@ -108,7 +108,7 @@ binary_sensor:
     device_class: occupancy
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     lambda: |-
       if ( id(mmwave).state && id(pir).state) {
         return true;

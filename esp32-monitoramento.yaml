@@ -36,7 +36,7 @@ binary_sensor:
     name: boia
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: problem
     entity_category: diagnostic
     filters: 
@@ -52,7 +52,7 @@ binary_sensor:
     name: Presença Abrigo
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: motion
     entity_category: diagnostic
     filters: 
@@ -68,7 +68,7 @@ binary_sensor:
     name: Porta Abrigo
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: door
     entity_category: diagnostic
     filters: 
