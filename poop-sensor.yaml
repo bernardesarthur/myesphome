@@ -1,0 +1,167 @@
+substitutions:
+  delay_liga_exaustor: 10s
+
+esphome:
+ name: "detector_de_coco"
+ friendly_name: poop
+ min_version: 2024.6.0
+ name_add_mac_suffix: false
+ #mac_address: "F0:24:F9:F3:3C:8C"
+
+ project:
+   name: esphome.web
+   version: dev
+
+esp8266:
+  board: esp8285
+
+wifi:
+  ssid: "xx"
+  password: "xx"
+
+logger:
+  baud_rate: 0  
+
+api:
+
+ota:
+  - platform: esphome
+
+captive_portal:
+
+web_server:
+
+uart:
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 256000
+
+ld2410:
+
+binary_sensor:
+  - platform: ld2410
+    has_still_target:
+      name: Presenca
+      id: still_target_sensor
+      on_press:
+        then:
+          - light.turn_on: light_1
+          - logger.log: "Luz acionada - Still target detectado"
+          - lambda: 'id(still_target_start_time) = millis();'
+          - script.execute: still_target_timer_30s
+      on_release:
+        then:
+          - script.stop: still_target_timer_30s
+          - script.stop: l2_delay_off_timer
+          - light.turn_off: light_1  # L1 sempre desliga imediatamente
+          - logger.log: "T2 L1 desligado imediatamente"
+          - lambda: |-
+              unsigned long elapsed_time = millis() - id(still_target_start_time);
+              unsigned long two_minutes = 2 * 60 * 1000; // 2 minutos em ms
+              
+              ESP_LOGI("timer", "Still target ativo por: %lu ms (%.1f min)", elapsed_time, elapsed_time / 60000.0);
+              
+              if (elapsed_time < two_minutes) {
+                // Menos de 2 minutos: desligar L2 imediatamente também
+                ESP_LOGI("timer", "Menos de 2min - Desligando T2 L2 imediatamente");
+              } else {
+                // Mais de 2 minutos: L2 com delay de 5min
+                ESP_LOGI("timer", "Mais de 2min - T2 L2 com delay de 5min");
+              }
+              
+
+          - if:
+              condition:
+                lambda: |-
+                  unsigned long elapsed_time = millis() - id(still_target_start_time);
+                  unsigned long two_minutes = 2 * 60 * 1000;
+                  id(still_target_start_time) = 0;                  
+                  return elapsed_time < two_minutes;
+              then:
+                - light.turn_off: light_2
+                - logger.log: "T2 L2 desligado - menos de 2 minutos"
+              else:
+                - script.execute: l2_delay_off_timer
+
+button:
+  - platform: restart
+    name: "My Device Restart"      
+
+output:
+  - platform: gpio
+    pin: GPIO12
+    id: relay_1
+
+  - platform: gpio
+    pin: GPIO5
+    id: relay_2
+
+light:
+  - platform: binary
+    name: "T2 L1"
+    id: light_1
+    output: relay_1
+
+  - platform: binary
+    name: "T2 L2"
+    id: light_2
+    output: relay_2
+
+sensor:
+  # Sensor para mostrar tempo de still target ativo
+  - platform: template
+    name: "Tempo no banheiro"
+    id: still_target_time_sensor
+    unit_of_measurement: "s"
+    device_class: duration
+    accuracy_decimals: 0
+    update_interval: 1s
+    lambda: |-
+      if (id(still_target_sensor).state && id(still_target_start_time) > 0) {
+        unsigned long elapsed = (millis() - id(still_target_start_time)) / 1000;
+        return elapsed;
+      } else {
+        return 0;
+      }
+
+# Automações para controle de still target
+globals:
+  - id: still_target_start_time
+    type: unsigned long
+    initial_value: '0'
+
+script:
+  - id: still_target_timer_30s
+    then:
+      - delay: $delay_liga_exaustor
+      - if:
+          condition:
+            binary_sensor.is_on: still_target_sensor
+          then:
+            - light.turn_on: light_2
+            - logger.log: "T2 L2 acionado após $delay_liga_exaustor segundos de still target"
+
+  - id: l2_delay_off_timer
+    then:
+      - delay: 5min
+      - light.turn_off: light_2
+      - logger.log: "T2 L2 desligado após 5 minutos de delay"
+
+text_sensor:
+  # Sensor de status do banheiro
+  - platform: template
+    name: "Status Banheiro"
+    id: bathroom_status
+    update_interval: 1s
+    lambda: |-
+      if (!id(still_target_sensor).state || id(still_target_start_time) == 0) {
+        return {"Vazio"};
+      }
+      
+      unsigned long elapsed = (millis() - id(still_target_start_time)) / 1000;
+      
+      if (elapsed < 30) {
+        return {"Xixi"};
+      } else {
+        return {"Cocô"};
+      }      
