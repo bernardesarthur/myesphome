@@ -45,7 +45,7 @@ binary_sensor:
     id: b1
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: moisture
     filters: 
       - delayed_on: 10ms
@@ -60,7 +60,7 @@ binary_sensor:
     id: b2
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: moisture
     filters: 
       - delayed_on: 10ms
@@ -75,7 +75,7 @@ binary_sensor:
     id: b3
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: moisture
     filters: 
       - delayed_on: 10ms
@@ -86,7 +86,7 @@ binary_sensor:
     id: status_alarme
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: problem
     filters:
       - delayed_on: 10ms

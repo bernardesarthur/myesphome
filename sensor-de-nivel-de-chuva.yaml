@@ -45,7 +45,7 @@ binary_sensor:
     name: boia
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     device_class: problem
     entity_category: diagnostic
     filters: 
@@ -57,7 +57,7 @@ binary_sensor:
     id: chuva_forte
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     lambda: |-
       if (id(intensidade_chuva).state == 3.0) {
         return true;  // Chuva forte detectada

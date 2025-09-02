@@ -40,7 +40,7 @@ binary_sensor:
     name: Contatora 1
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     filters: 
       - delayed_on: 10ms
       - delayed_off: 10ms
@@ -54,7 +54,7 @@ binary_sensor:
     name: Contatora 2
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     filters: 
       - delayed_on: 10ms
       - delayed_off: 10ms
@@ -68,7 +68,7 @@ binary_sensor:
     name: Contatora 3
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     filters: 
       - delayed_on: 10ms
       - delayed_off: 10ms
@@ -82,7 +82,7 @@ binary_sensor:
     name: Contatora 4
     internal: False
     disabled_by_default: False
-    publish_initial_state: True
+    trigger_on_initial_state: True
     filters: 
       - delayed_on: 10ms
       - delayed_off: 10ms
