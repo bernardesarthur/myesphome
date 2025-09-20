@@ -19,6 +19,39 @@ packages:
 wifi:
   use_address: 192.168.212.223
 
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO16
+      inverted: False
+    name: Sentido da Válvula
+    id: sentido_da_valvula
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: &interlock_group_1 [sentido_da_valvula, relay_2]
+#    interlock_wait_time: 0ms
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: sentido_da_valvula
+
+  - platform: gpio
+    pin:
+      number: GPIO14
+      inverted: False
+    name: Energia da Válvula
+    id: energia_da_valvula
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: *interlock_group_1
+#    interlock_wait_time: 0ms
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: energia_da_valvula
+
 sensor:
   - platform: pulse_counter
     pin: D5
