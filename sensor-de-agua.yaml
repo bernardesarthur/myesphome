@@ -24,7 +24,7 @@ sensor:
     pin: D5
     unit_of_measurement: "L/min"
     accuracy_decimals: 2
-    update_interval: 30s
+    update_interval: 60s
     internal: False
     disabled_by_default: False
     id: water_meter_house
@@ -37,7 +37,7 @@ sensor:
       name: Water Meter Total
       internal: False
       disabled_by_default: False
-      update_interval: 30s
+      update_interval: 60s
       id: water_meter_total
       accuracy_decimals: 2
       filters:
