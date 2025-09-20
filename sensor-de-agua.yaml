@@ -1,6 +1,6 @@
 esphome:
-  name: esp32-monitoramento-agua
-  friendly_name: ESP32 Monitoramento de Água
+  name: monitoramento-agua
+  friendly_name: Monitoramento de Água
 
 esp8266:
   board: esp01_1m
@@ -24,20 +24,21 @@ sensor:
     pin: D5
     unit_of_measurement: "L/min"
     accuracy_decimals: 2
-    update_interval: 60s
+    update_interval: 30s
     internal: False
     disabled_by_default: False
     id: water_meter_house
     name: Water Meter House
     filters:
-    - lambda: return (x / 27.0);
+    - lambda: return (x / 450.0);
 
     total:
       unit_of_measurement: "L"
       name: Water Meter Total
       internal: False
       disabled_by_default: False
+      update_interval: 30s
       id: water_meter_total
       accuracy_decimals: 2
       filters:
-      - lambda: return (x / 27.0);
+      - lambda: return (x / 450.0);
