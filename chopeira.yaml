@@ -1,3 +1,33 @@
+esphome:
+  name: esp32-monitoramento
+  friendly_name: ESP32 Monitoramento
+
+esp32:
+  board: esp32dev
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+    version: recommended
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: True
+
+bluetooth_proxy:
+  active: True
+
+packages:
+  remote_package:
+    url: https://github.com/bernardesarthur/myesphome
+    ref: main
+    refresh: 300s
+    files:
+      - base.yaml
+
+# Add after install on device
+wifi:
+  use_address: 192.168.212.223
+
 # Configuração do display SSD1306
 i2c:
   sda: GPIO21
@@ -64,6 +94,8 @@ sensor:
     id: temp_sensor
     update_interval: 10s
     accuracy_decimals: 2
+    internal: False
+    disabled_by_default: False
 
   - platform: hx711
     name: "Valor HX711"
@@ -72,6 +104,8 @@ sensor:
     gain: 64
     update_interval: 10s
     accuracy_decimals: 1
+    internal: False
+    disabled_by_default: False
     filters:
       - calibrate_linear:
           - -11000 -> 0
@@ -83,22 +117,55 @@ sensor:
 switch:
   - platform: gpio
     name: "Rele Canal 1"
-    pin: GPIO15
+    pin:
+      number: GPIO15
+      inverted: False    
     id: rele_canal_1
-    inverted: true
-    restore_mode: ALWAYS_ON
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: &interlock_group_1 [rele_canal_1, rele_canal_2]
+#    interlock_wait_time: 0ms
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: rele_canal_1
 
   - platform: gpio
     name: "Rele Canal 2"
-    pin: GPIO16
+    pin:
+      number: GPIO16
+      inverted: False    
     id: rele_canal_2
-    inverted: true
-    restore_mode: ALWAYS_OFF
+    internal: False
+    disabled_by_default: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: RESTORE_DEFAULT_OFF
+#    interlock: *interlock_group_1
+#    interlock_wait_time: 0ms
+#    on_turn_on:
+#    - delay: 500ms
+#    - switch.turn_off: relay_canal_2
 
-time:
-  - platform: sntp
-    id: esptime
-    servers:
-      - 0.br.pool.ntp.org
-      - 1.br.pool.ntp.org
-      - 2.br.pool.ntp.org
+  - platform: template
+    name: Todos
+    id: todos
+    internal: False
+    disabled_by_default: False
+    optimistic: False
+    # RESTORE_DEFAULT_OFF or RESTORE_DEFAULT_ON or RESTORE_INVERTED_DEFAULT_OFF or RESTORE_INVERTED_DEFAULT_ON or ALWAYS_OFF or ALWAYS_ON or DISABLED
+    restore_mode: DISABLED
+    lambda: |-
+      if (id(relay_canal_1).state || id(relay_canal_2).state) {
+        return true;
+      } else {
+        return false;
+      }
+    turn_on_action: 
+      then:
+        - switch.turn_on: relay_canal_1
+        - switch.turn_on: relay_canal_2
+    turn_off_action:
+      then:
+        - switch.turn_off: relay_canal_1
+        - switch.turn_off: relay_canal_2

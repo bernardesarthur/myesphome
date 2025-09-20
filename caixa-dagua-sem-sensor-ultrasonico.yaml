@@ -4,8 +4,10 @@ esphome:
 
 esp32:
   board: esp32dev
+  flash_size: 4MB
   framework:
-    type: arduino
+    type: esp-idf
+    version: recommended
 
 esp32_ble_tracker:
   scan_parameters:

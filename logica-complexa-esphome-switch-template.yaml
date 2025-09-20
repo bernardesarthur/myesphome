@@ -73,7 +73,6 @@ interval:
           else:
             - logger.log: "Desativando relé porque está fora do horário noturno"
             - switch.turn_off: relay_switch
-
     lambda: |-
               if ((id(relay_1).state && id(relay_2).state) || 
                  (id(relay_3).state && id(relay_4).state) || 
